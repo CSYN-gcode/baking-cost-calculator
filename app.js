@@ -3,6 +3,10 @@ const API_URL =
 
 console.log('BAKING API URL:', API_URL);
 
+let adminAuthenticated = false;
+
+let adminPin = '';
+
 let masterData = {
     ingredients: [],
     recipes: [],
@@ -10,7 +14,6 @@ let masterData = {
     packaging: [],
     expenses: []
 };
-
 
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -20,6 +23,630 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
+function loadAdminTables() {
+
+    populateIngredientsAdmin();
+
+    populatePackagingAdmin();
+
+    populateExpensesAdmin();
+
+}
+
+function populateIngredientsAdmin() {
+
+    const tbody =
+        document.getElementById(
+            'ingredientsAdminBody'
+        );
+
+
+    tbody.innerHTML = '';
+
+
+    masterData.ingredients.forEach(
+        function(item) {
+
+            const row =
+                document.createElement('tr');
+
+
+            row.innerHTML = `
+
+                <td>
+                    ${item.ingredient_id}
+                </td>
+
+                <td>
+                    ${item.ingredient_name}
+                </td>
+
+                <td>
+                    ${item.unit}
+                </td>
+
+                <td>
+                    ${item.purchase_qty}
+                </td>
+
+                <td>
+                    ${money(item.purchase_price)}
+                </td>
+
+                <td>
+                    ${money(item.cost_per_unit)}
+                </td>
+
+                <td>
+
+                    <button
+                        type="button"
+                        class="btn btn-small btn-primary"
+                        onclick="editIngredient('${item.ingredient_id}')"
+                    >
+                        ✏ Edit
+                    </button>
+
+                </td>
+
+            `;
+
+
+            tbody.appendChild(row);
+
+        }
+    );
+
+}
+
+function populatePackagingAdmin() {
+
+    const tbody =
+        document.getElementById(
+            'packagingAdminBody'
+        );
+
+
+    tbody.innerHTML = '';
+
+
+    masterData.packaging.forEach(
+        function(item) {
+
+            const row =
+                document.createElement('tr');
+
+
+            row.innerHTML = `
+
+                <td>
+                    ${item.packaging_id}
+                </td>
+
+                <td>
+                    ${item.packaging_name}
+                </td>
+
+                <td>
+                    ${item.unit}
+                </td>
+
+                <td>
+                    ${money(item.cost)}
+                </td>
+
+                <td>
+
+                    <button
+                        type="button"
+                        class="btn btn-small btn-primary"
+                        onclick="editPackaging('${item.packaging_id}')"
+                    >
+                        ✏ Edit
+                    </button>
+
+                </td>
+
+            `;
+
+
+            tbody.appendChild(row);
+
+        }
+    );
+
+}
+
+function populateExpensesAdmin() {
+
+    const tbody =
+        document.getElementById(
+            'expensesAdminBody'
+        );
+
+
+    tbody.innerHTML = '';
+
+
+    masterData.expenses.forEach(
+        function(item) {
+
+            const row =
+                document.createElement('tr');
+
+
+            row.innerHTML = `
+
+                <td>
+                    ${item.expense_id}
+                </td>
+
+                <td>
+                    ${item.expense_name}
+                </td>
+
+                <td>
+                    ${item.unit}
+                </td>
+
+                <td>
+                    ${money(item.cost)}
+                </td>
+
+                <td>
+
+                    <button
+                        type="button"
+                        class="btn btn-small btn-primary"
+                        onclick="editExpense('${item.expense_id}')"
+                    >
+                        ✏ Edit
+                    </button>
+
+                </td>
+
+            `;
+
+
+            tbody.appendChild(row);
+
+        }
+    );
+
+}
+
+function editIngredient(id) {
+
+    const item =
+        masterData.ingredients.find(
+            function(x) {
+
+                return String(
+                    x.ingredient_id
+                ) === String(id);
+
+            }
+        );
+
+
+    if (!item) {
+        return;
+    }
+
+
+    const name =
+        prompt(
+            'Ingredient name:',
+            item.ingredient_name
+        );
+
+
+    if (name === null) {
+        return;
+    }
+
+
+    const quantity =
+        prompt(
+            'Purchase quantity (' +
+            item.unit +
+            '):',
+            item.purchase_qty
+        );
+
+
+    if (quantity === null) {
+        return;
+    }
+
+
+    const price =
+        prompt(
+            'Purchase price:',
+            item.purchase_price
+        );
+
+
+    if (price === null) {
+        return;
+    }
+
+
+    updateMasterlist(
+        'Ingredients',
+        {
+            id: item.ingredient_id,
+
+            ingredient_name: name,
+
+            unit: item.unit,
+
+            purchase_qty: quantity,
+
+            purchase_price: price
+        }
+    );
+
+}
+
+function editPackaging(id) {
+
+    const item =
+        masterData.packaging.find(
+            function(x) {
+
+                return String(
+                    x.packaging_id
+                ) === String(id);
+
+            }
+        );
+
+
+    if (!item) {
+        return;
+    }
+
+
+    const name =
+        prompt(
+            'Packaging name:',
+            item.packaging_name
+        );
+
+
+    if (name === null) {
+        return;
+    }
+
+
+    const cost =
+        prompt(
+            'Packaging cost:',
+            item.cost
+        );
+
+
+    if (cost === null) {
+        return;
+    }
+
+
+    updateMasterlist(
+        'Packaging',
+        {
+            id: item.packaging_id,
+
+            packaging_name: name,
+
+            unit: item.unit,
+
+            cost: cost
+        }
+    );
+
+}
+
+function editExpense(id) {
+
+    const item =
+        masterData.expenses.find(
+            function(x) {
+
+                return String(
+                    x.expense_id
+                ) === String(id);
+
+            }
+        );
+
+
+    if (!item) {
+        return;
+    }
+
+
+    const name =
+        prompt(
+            'Expense name:',
+            item.expense_name
+        );
+
+
+    if (name === null) {
+        return;
+    }
+
+
+    const cost =
+        prompt(
+            'Cost per ' + item.unit + ':',
+            item.cost
+        );
+
+
+    if (cost === null) {
+        return;
+    }
+
+
+    updateMasterlist(
+        'Expenses',
+        {
+            id: item.expense_id,
+
+            expense_name: name,
+
+            unit: item.unit,
+
+            cost: cost
+        }
+    );
+
+}
+
+function updateMasterlist(
+    sheet,
+    data
+) {
+
+    const callbackName =
+        'updateCallback_' +
+        Date.now();
+
+
+    window[callbackName] =
+        function(response) {
+
+            console.log(
+                'UPDATE RESPONSE:',
+                response
+            );
+
+
+            if (
+                response &&
+                response.success
+            ) {
+
+                alert(
+                    'Saved successfully!'
+                );
+
+
+                /*
+                 * Reload everything from
+                 * Google Sheets.
+                 */
+
+                loadMasterlist();
+
+
+            }
+
+            else {
+
+                alert(
+                    response.error ||
+                    'Unable to save changes.'
+                );
+
+            }
+
+
+            delete window[callbackName];
+
+        };
+
+
+    const params = new URLSearchParams();
+
+
+    params.append(
+        'action',
+        'update'
+    );
+
+
+    params.append(
+        'pin',
+        adminPin
+    );
+
+
+    params.append(
+        'sheet',
+        sheet
+    );
+
+
+    Object.keys(data)
+        .forEach(function(key) {
+
+            params.append(
+                key,
+                data[key]
+            );
+
+        });
+
+
+    params.append(
+        'callback',
+        callbackName
+    );
+
+
+    const script =
+        document.createElement('script');
+
+
+    script.src =
+        API_URL +
+        '?' +
+        params.toString();
+
+
+    document.body.appendChild(
+        script
+    );
+
+}
+
+function switchAdminTab(
+    tabId,
+    button
+) {
+
+    document
+        .querySelectorAll(
+            '.admin-tab-content'
+        )
+        .forEach(function(tab) {
+
+            tab.style.display =
+                'none';
+
+        });
+
+
+    document
+        .querySelectorAll(
+            '.admin-tab'
+        )
+        .forEach(function(tabButton) {
+
+            tabButton.classList
+                .remove('active');
+
+        });
+
+
+    document
+        .getElementById(tabId)
+        .style.display =
+        'block';
+
+
+    button.classList.add(
+        'active'
+    );
+
+}
+
+function adminLogin() {
+
+    const pin =
+        document
+            .getElementById('adminPin')
+            .value
+            .trim();
+
+
+    if (!pin) {
+
+        showAdminLoginError(
+            'Please enter the admin PIN.'
+        );
+
+        return;
+
+    }
+
+
+    const callbackName =
+        'adminLoginCallback_' +
+        Date.now();
+
+
+    window[callbackName] =
+        function(data) {
+
+            console.log(
+                'ADMIN LOGIN:',
+                data
+            );
+
+
+            if (
+                data &&
+                data.success
+            ) {
+
+                adminAuthenticated = true;
+
+                adminPin = pin;
+
+
+                document
+                    .getElementById('adminLogin')
+                    .style.display = 'none';
+
+
+                document
+                    .getElementById('adminDashboard')
+                    .style.display = 'block';
+
+
+                loadAdminTables();
+
+            }
+
+            else {
+
+                showAdminLoginError(
+                    data.error ||
+                    'Invalid PIN.'
+                );
+
+            }
+
+
+            delete window[callbackName];
+
+        };
+
+
+    const script =
+        document.createElement('script');
+
+
+    script.src =
+    API_URL +
+    '?action=login' +
+    '&pin=' +
+    encodeURIComponent(pin) +
+    '&callback=' +
+    callbackName;
+
+    /*
+     * We don't actually want to update anything.
+     * Apps Script needs a dedicated login endpoint.
+     */
+
+    document.body.appendChild(script);
+
+}
 
 function loadMasterlist() {
 
@@ -236,6 +863,54 @@ function setupEvents() {
             loadMasterlist
         );
 
+    document
+    .getElementById('adminButton')
+    .addEventListener(
+        'click',
+        showAdmin
+    );
+
+    document
+        .getElementById('calculatorButton')
+        .addEventListener(
+            'click',
+            showCalculator
+        );
+    
+    
+    document
+        .getElementById('adminLoginButton')
+        .addEventListener(
+            'click',
+            adminLogin
+        );
+    
+    
+    document
+        .getElementById('adminLogoutButton')
+        .addEventListener(
+            'click',
+            adminLogout
+        );
+    
+    
+    document
+        .querySelectorAll('.admin-tab')
+        .forEach(function(button) {
+    
+            button.addEventListener(
+                'click',
+                function() {
+    
+                    switchAdminTab(
+                        this.dataset.tab,
+                        this
+                    );
+    
+                }
+            );
+    
+        });
 }
 
 
@@ -926,6 +1601,78 @@ function hideLoading() {
 
 }
 
+function showAdmin() {
+
+    document
+        .getElementById('calculator')
+        .style.display = 'none';
+
+
+    document
+        .getElementById('adminPanel')
+        .style.display = 'block';
+
+
+    if (adminAuthenticated) {
+
+        document
+            .getElementById('adminLogin')
+            .style.display = 'none';
+
+
+        document
+            .getElementById('adminDashboard')
+            .style.display = 'block';
+
+
+        loadAdminTables();
+
+    }
+
+    else {
+
+        document
+            .getElementById('adminLogin')
+            .style.display = 'block';
+
+
+        document
+            .getElementById('adminDashboard')
+            .style.display = 'none';
+
+    }
+
+}
+
+
+function showCalculator() {
+
+    document
+        .getElementById('adminPanel')
+        .style.display = 'none';
+
+
+    document
+        .getElementById('calculator')
+        .style.display = 'block';
+
+}
+
+
+function adminLogout() {
+
+    adminAuthenticated = false;
+
+    adminPin = '';
+
+    document
+        .getElementById('adminPin')
+        .value = '';
+
+
+    showCalculator();
+
+}
 
 function showError(message) {
 
