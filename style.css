@@ -184,3 +184,33 @@ input:read-only {
     color: #888;
     text-align: center;
 }
+
+.expense-row {
+    display: grid;
+    grid-template-columns: 1fr 80px 90px;
+    gap: 10px;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.expense-info strong {
+    display: block;
+}
+
+.expense-info small {
+    display: block;
+    color: #777;
+    margin-top: 3px;
+}
+
+.expense-input input {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+}
+
+.expense-total {
+    text-align: right;
+    font-weight: bold;
+}
