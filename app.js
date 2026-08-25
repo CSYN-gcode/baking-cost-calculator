@@ -1,5 +1,5 @@
 const API_URL =
-    'https://script.google.com/macros/s/AKfycbyEzjSbd9Sg1fvHT9tmFTzw57ejkm-KT7O_lCabzxxWrBUB9P0pdUtJEweFRJsklJQX/exec';
+    'https://script.google.com/macros/s/AKfycbz0vvhYGvOFoszUtXq3Vp_tzMMfjCTibBhO7utFe9Yj4lAz-MY9vn8C0agCOnAr-e6G/exec';
 
 let masterData = {
     ingredients: [],
