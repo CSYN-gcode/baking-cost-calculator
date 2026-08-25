@@ -453,18 +453,15 @@ function updateMasterlist(
         'update'
     );
 
-
     params.append(
         'pin',
         adminPin
     );
 
-
     params.append(
         'sheet',
         sheet
     );
-
 
     Object.keys(data)
         .forEach(function(key) {
@@ -485,7 +482,6 @@ function updateMasterlist(
 
     const script =
         document.createElement('script');
-
 
     script.src =
         API_URL +
