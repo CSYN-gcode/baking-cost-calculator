@@ -1,0 +1,186 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+    color: #333;
+}
+
+.container {
+    width: 100%;
+    max-width: 600px;
+    margin: auto;
+    padding: 15px;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    margin-bottom: 5px;
+    font-size: 26px;
+}
+
+.header p {
+    margin-top: 0;
+    color: #777;
+    font-size: 14px;
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.card h2 {
+    margin-top: 0;
+    font-size: 18px;
+}
+
+label {
+    display: block;
+    margin-top: 12px;
+    margin-bottom: 6px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    background: white;
+}
+
+input:read-only {
+    background: #f1f1f1;
+}
+
+.row {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 10px;
+}
+
+.ingredient-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 9px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+}
+
+.ingredient-name {
+    font-weight: bold;
+}
+
+.ingredient-details {
+    color: #777;
+    font-size: 12px;
+}
+
+.ingredient-cost {
+    font-weight: bold;
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 2px solid #ddd;
+    font-size: 16px;
+}
+
+.percentage-input {
+    position: relative;
+}
+
+.percentage-input input {
+    padding-right: 40px;
+}
+
+.percentage-input span {
+    position: absolute;
+    right: 15px;
+    top: 12px;
+    font-weight: bold;
+}
+
+.result-card {
+    background: #222;
+    color: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+}
+
+.result-line {
+    display: flex;
+    justify-content: space-between;
+    margin: 12px 0;
+}
+
+.result-line strong {
+    font-size: 16px;
+}
+
+.selling-price {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.selling-price span {
+    display: block;
+    font-size: 14px;
+}
+
+.selling-price strong {
+    display: block;
+    font-size: 32px;
+    margin-top: 5px;
+}
+
+.result-card hr {
+    border: none;
+    border-top: 1px solid #555;
+}
+
+.refresh-button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    background: #333;
+    color: white;
+}
+
+.loading {
+    text-align: center;
+    padding: 40px 10px;
+}
+
+.error {
+    background: #ffe5e5;
+    color: #b00000;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.muted {
+    color: #888;
+    text-align: center;
+}
