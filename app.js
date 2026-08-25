@@ -650,7 +650,7 @@ function adminLogin() {
 
 function loadMasterlist() {
 
-    showLoading();
+    // showLoading();
 
     const callbackName =
         'bakingCalculatorCallback_' + Date.now();
@@ -1644,13 +1644,11 @@ function showAdmin() {
 
 }
 
-
 function showCalculator() {
 
     document
         .getElementById('adminPanel')
         .style.display = 'none';
-
 
     document
         .getElementById('calculator')
