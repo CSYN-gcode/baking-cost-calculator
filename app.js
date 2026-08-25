@@ -1,6 +1,8 @@
 const API_URL =
     'https://script.google.com/macros/s/AKfycbz0vvhYGvOFoszUtXq3Vp_tzMMfjCTibBhO7utFe9Yj4lAz-MY9vn8C0agCOnAr-e6G/exec';
 
+console.log('BAKING API URL:', API_URL);
+
 let masterData = {
     ingredients: [],
     recipes: [],
