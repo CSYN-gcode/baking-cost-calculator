@@ -414,25 +414,20 @@ function updateMasterlist(
         'updateCallback_' +
         Date.now();
 
-
     window[callbackName] =
         function(response) {
-
             console.log(
                 'UPDATE RESPONSE:',
                 response
             );
 
-
             if (
                 response &&
                 response.success
             ) {
-
                 alert(
                     'Saved successfully!'
                 );
-
 
                 /*
                  * Reload everything from
@@ -441,26 +436,17 @@ function updateMasterlist(
 
                 loadMasterlist();
 
-
-            }
-
-            else {
-
+            } else {
                 alert(
                     response.error ||
                     'Unable to save changes.'
                 );
-
             }
 
-
             delete window[callbackName];
-
         };
 
-
     const params = new URLSearchParams();
-
 
     params.append(
         'action',
@@ -655,7 +641,6 @@ function loadMasterlist() {
     const callbackName =
         'bakingCalculatorCallback_' + Date.now();
 
-
     window[callbackName] = function (data) {
 
         console.log(
@@ -663,27 +648,20 @@ function loadMasterlist() {
             data
         );
 
-
         try {
-
             if (!data) {
-
                 throw new Error(
                     'No data was returned from Google Sheets.'
                 );
-
             }
 
 
             if (!data.success) {
-
                 throw new Error(
                     data.error ||
                     'Google Sheets returned an error.'
                 );
-
             }
-
 
             /*
              * Make sure the expected arrays exist.
@@ -744,15 +722,10 @@ function loadMasterlist() {
                 masterData.expenses
             );
 
-
             populateRecipes();
-
             populatePackaging();
-
             populateExpenses();
-
-            hideLoading();
-
+            // hideLoading();
 
         } catch (error) {
 
@@ -761,13 +734,10 @@ function loadMasterlist() {
                 error
             );
 
-
             showError(
                 error.message
             );
-
         }
-
 
         delete window[callbackName];
 
@@ -782,14 +752,11 @@ function loadMasterlist() {
 
     };
 
-
     const script =
         document.createElement('script');
 
-
     script.id =
         callbackName;
-
 
     script.src =
         API_URL +
@@ -798,18 +765,13 @@ function loadMasterlist() {
         '&t=' +
         Date.now();
 
-
     script.onerror = function () {
-
         showError(
             'Unable to connect to the Google Sheets API.'
         );
-
     };
 
-
     document.body.appendChild(script);
-
 }
 
 
@@ -1567,85 +1529,63 @@ function money(value) {
 
 }
 
-
 function showLoading() {
-
     document.getElementById(
         'loading'
     ).style.display = 'block';
 
-
     document.getElementById(
         'calculator'
     ).style.display = 'none';
-
 
     document.getElementById(
         'loading'
     ).innerHTML =
         'Loading masterlist...';
-
 }
 
-
 function hideLoading() {
-
     document.getElementById(
         'loading'
     ).style.display = 'none';
 
-
     document.getElementById(
         'calculator'
     ).style.display = 'block';
-
 }
 
 function showAdmin() {
-
     document
         .getElementById('calculator')
         .style.display = 'none';
-
 
     document
         .getElementById('adminPanel')
         .style.display = 'block';
 
-
     if (adminAuthenticated) {
-
         document
             .getElementById('adminLogin')
             .style.display = 'none';
 
-
         document
             .getElementById('adminDashboard')
             .style.display = 'block';
-
 
         loadAdminTables();
-
-    }
-
-    else {
-
+    } else {
         document
             .getElementById('adminLogin')
             .style.display = 'block';
-
 
         document
             .getElementById('adminDashboard')
             .style.display = 'none';
 
     }
-
 }
 
 function showCalculator() {
-
     document
         .getElementById('adminPanel')
         .style.display = 'none';
@@ -1653,12 +1593,10 @@ function showCalculator() {
     document
         .getElementById('calculator')
         .style.display = 'block';
-
 }
 
 
 function adminLogout() {
-
     adminAuthenticated = false;
 
     adminPin = '';
@@ -1667,9 +1605,7 @@ function adminLogout() {
         .getElementById('adminPin')
         .value = '';
 
-
     showCalculator();
-
 }
 
 function showError(message) {
