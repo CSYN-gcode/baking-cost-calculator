@@ -35,6 +35,8 @@ function loadMasterlist() {
 
     window[callbackName] = function (data) {
 
+        console.log('GOOGLE SHEETS DATA:', data);
+        
         try {
 
             if (!data.success) {
