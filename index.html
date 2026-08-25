@@ -24,13 +24,34 @@
 <div class="container">
 
     <div class="header">
-
-        <h1>🥐 Baking Cost Calculator</h1>
-
-        <p>
-            Calculate your pastry production cost and selling price
-        </p>
-
+        <div class="topbar">
+    
+            <div>
+                <h1>🥐 Baking Cost Calculator</h1>
+                <p class="subtitle">
+                    Calculate recipe cost, selling price and profit
+                </p>
+            </div>
+            
+            <div class="topbar-actions">
+                <button
+                    type="button"
+                    id="calculatorButton"
+                    class="btn btn-primary"
+                >
+                    Calculator
+                </button>
+            
+                <button
+                    type="button"
+                    id="adminButton"
+                    class="btn btn-secondary"
+                >
+                    ⚙ Admin
+                </button>
+            </div>
+            
+        </div>
     </div>
 
 
@@ -127,13 +148,10 @@
 
         </div>
 
-
         <!-- OTHER COSTS -->
 
         <div class="card">
-        
             <h2>Other Costs</h2>
-        
         
             <div id="expenseList">
         
@@ -142,7 +160,6 @@
                 </p>
         
             </div>
-        
         
             <label>
                 Packaging
@@ -155,7 +172,6 @@
                 </option>
         
             </select>
-        
         
             <label>
                 Packaging Quantity
@@ -170,7 +186,6 @@
             >
         
         </div>
-
 
         <!-- PROFIT -->
 
@@ -195,13 +210,11 @@
 
             </select>
 
-
             <label>
                 Percentage
             </label>
 
             <div class="percentage-input">
-
                 <input
                     type="number"
                     id="profitPercent"
@@ -210,13 +223,10 @@
                     max="99.99"
                     step="0.01"
                 >
-
                 <span>%</span>
-
             </div>
 
         </div>
-
 
         <!-- RESULT -->
 
@@ -301,7 +311,269 @@
 
 
     </div>
+    <!-- end of calculator container-->
 
+    <div id="adminPanel" style="display:none;">
+
+        <!-- ADMIN LOGIN -->
+    
+        <div id="adminLogin" class="admin-login">
+    
+            <div class="admin-login-card">
+    
+                <div class="admin-icon">
+                    🔐
+                </div>
+    
+                <h2>Admin Access</h2>
+    
+                <p>
+                    Enter the administrator PIN
+                    to manage your masterlist.
+                </p>
+    
+                <input
+                    type="password"
+                    id="adminPin"
+                    placeholder="Enter PIN"
+                    maxlength="20"
+                >
+    
+                <button
+                    type="button"
+                    id="adminLoginButton"
+                    class="btn btn-primary btn-full"
+                >
+                    Login
+                </button>
+    
+                <div
+                    id="adminLoginError"
+                    class="admin-error"
+                    style="display:none;"
+                ></div>
+    
+            </div>
+    
+        </div>
+    
+        <!-- ADMIN DASHBOARD -->
+    
+        <div
+            id="adminDashboard"
+            style="display:none;"
+        >
+    
+            <div class="admin-header">
+    
+                <div>
+    
+                    <h2>
+                        Masterlist Management
+                    </h2>
+    
+                    <p>
+                        Manage ingredient prices,
+                        packaging and operating costs.
+                    </p>
+    
+                </div>
+    
+                <button
+                    type="button"
+                    id="adminLogoutButton"
+                    class="btn btn-danger"
+                >
+                    Logout
+                </button>
+    
+            </div>
+    
+    
+            <!-- TABS -->
+    
+            <div class="admin-tabs">
+    
+                <button
+                    type="button"
+                    class="admin-tab active"
+                    data-tab="ingredientsAdmin"
+                >
+                    🥣 Ingredients
+                </button>
+    
+                <button
+                    type="button"
+                    class="admin-tab"
+                    data-tab="packagingAdmin"
+                >
+                    📦 Packaging
+                </button>
+    
+                <button
+                    type="button"
+                    class="admin-tab"
+                    data-tab="expensesAdmin"
+                >
+                    💰 Expenses
+                </button>
+    
+            </div>
+    
+    
+            <!-- INGREDIENTS -->
+    
+            <div
+                id="ingredientsAdmin"
+                class="admin-tab-content"
+            >
+    
+                <div class="admin-section-header">
+    
+                    <div>
+    
+                        <h3>
+                            Ingredients
+                        </h3>
+    
+                        <p>
+                            Update purchase prices and
+                            quantities.
+                        </p>
+    
+                    </div>
+    
+                </div>
+    
+    
+                <div class="table-wrapper">
+    
+                    <table class="admin-table">
+    
+                        <thead>
+    
+                            <tr>
+    
+                                <th>ID</th>
+                                <th>Ingredient</th>
+                                <th>Unit</th>
+                                <th>Purchase Qty</th>
+                                <th>Purchase Price</th>
+                                <th>Cost / Unit</th>
+                                <th>Action</th>
+    
+                            </tr>
+    
+                        </thead>
+    
+                        <tbody
+                            id="ingredientsAdminBody"
+                        ></tbody>
+    
+                    </table>
+    
+                </div>
+    
+            </div>
+    
+    
+            <!-- PACKAGING -->
+    
+            <div
+                id="packagingAdmin"
+                class="admin-tab-content"
+                style="display:none;"
+            >
+    
+                <div class="admin-section-header">
+    
+                    <div>
+    
+                        <h3>
+                            Packaging
+                        </h3>
+    
+                        <p>
+                            Manage packaging costs.
+                        </p>
+    
+                    </div>
+    
+                </div>
+    
+    
+                <div class="table-wrapper">
+    
+                    <table class="admin-table">
+    
+                        <thead>
+    
+                            <tr>
+    
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Unit</th>
+                                <th>Cost</th>
+                                <th>Action</th>
+    
+                            </tr>
+    
+                        </thead>
+    
+                        <tbody
+                            id="packagingAdminBody"
+                        ></tbody>
+    
+                    </table>
+    
+                </div>
+    
+            </div>
+    
+    
+            <!-- EXPENSES -->
+    
+            <div
+                id="expensesAdmin"
+                class="admin-tab-content"
+                style="display:none;"
+            >
+                <div class="admin-section-header">
+                    <div>
+                        <h3>
+                            Other Expenses
+                        </h3>
+    
+                        <p>
+                            Manage labor, electricity,
+                            gas and miscellaneous rates.
+                        </p>
+                    </div>
+                </div>
+    
+    
+                <div class="table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+    
+                                <th>ID</th>
+                                <th>Expense</th>
+                                <th>Unit</th>
+                                <th>Cost</th>
+                                <th>Action</th>
+    
+                            </tr>
+    
+                        </thead>
+                        <tbody
+                            id="expensesAdminBody"
+                        ></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 
