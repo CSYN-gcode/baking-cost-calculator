@@ -122,6 +122,7 @@ function loadMasterlist() {
 
             populatePackaging();
 
+            populateExpenses();
 
             hideLoading();
 
@@ -210,30 +211,7 @@ function setupEvents() {
             calculateTotal
         );
 
-
-    document
-        .getElementById('labor')
-        .addEventListener(
-            'input',
-            calculateTotal
-        );
-
-
-    document
-        .getElementById('utilities')
-        .addEventListener(
-            'input',
-            calculateTotal
-        );
-
-
-    document
-        .getElementById('misc')
-        .addEventListener(
-            'input',
-            calculateTotal
-        );
-
+    populateExpenses();
 
     document
         .getElementById('pricingMethod')
@@ -336,6 +314,101 @@ function populatePackaging() {
 
 }
 
+function populateExpenses() {
+
+    const container =
+        document.getElementById(
+            'expenseList'
+        );
+
+
+    container.innerHTML = '';
+
+
+    if (
+        !masterData.expenses ||
+        masterData.expenses.length === 0
+    ) {
+
+        container.innerHTML =
+            '<p class="muted">No expenses found.</p>';
+
+        return;
+
+    }
+
+
+    masterData.expenses.forEach(
+        function (expense) {
+
+            const row =
+                document.createElement('div');
+
+
+            row.className =
+                'expense-row';
+
+
+            row.innerHTML = `
+
+                <div class="expense-info">
+
+                    <strong>
+                        ${expense.expense_name}
+                    </strong>
+
+                    <small>
+                        Rate:
+                        ${money(expense.cost)}
+                        /
+                        ${expense.unit}
+                    </small>
+
+                </div>
+
+
+                <div class="expense-input">
+
+                    <input
+                        type="number"
+                        class="expense-qty"
+                        data-expense-id="${expense.expense_id}"
+                        value="1"
+                        min="0"
+                        step="0.01"
+                    >
+
+                </div>
+
+
+                <div class="expense-total"
+                     data-expense-total="${expense.expense_id}">
+
+                    ${money(expense.cost)}
+
+                </div>
+
+            `;
+
+
+            container.appendChild(row);
+
+        }
+    );
+
+
+    document
+        .querySelectorAll('.expense-qty')
+        .forEach(function(input) {
+
+            input.addEventListener(
+                'input',
+                calculateTotal
+            );
+
+        });
+
+}
 
 function calculateRecipe() {
 
@@ -615,6 +688,73 @@ function calculatePackaging() {
 
 }
 
+function calculateExpenses() {
+
+    let total = 0;
+
+
+    document
+        .querySelectorAll('.expense-qty')
+        .forEach(function(input) {
+
+            const expenseId =
+                input.dataset.expenseId;
+
+
+            const quantity =
+                Number(input.value) || 0;
+
+
+            const expense =
+                masterData.expenses.find(
+                    function(item) {
+
+                        return String(
+                            item.expense_id
+                        ) === String(
+                            expenseId
+                        );
+
+                    }
+                );
+
+
+            if (!expense) {
+                return;
+            }
+
+
+            const rate =
+                Number(expense.cost) || 0;
+
+
+            const expenseTotal =
+                quantity * rate;
+
+
+            total += expenseTotal;
+
+
+            const totalElement =
+                document.querySelector(
+                    `[data-expense-total="${expenseId}"]`
+                );
+
+
+            if (totalElement) {
+
+                totalElement.textContent =
+                    money(expenseTotal);
+
+            }
+
+        });
+
+
+    return total;
+
+}
+
 
 function calculateTotal() {
 
@@ -625,37 +765,13 @@ function calculateTotal() {
     const packagingTotal =
         calculatePackaging();
 
-
-    const labor =
-        Number(
-            document.getElementById(
-                'labor'
-            ).value
-        ) || 0;
-
-
-    const utilities =
-        Number(
-            document.getElementById(
-                'utilities'
-            ).value
-        ) || 0;
-
-
-    const misc =
-        Number(
-            document.getElementById(
-                'misc'
-            ).value
-        ) || 0;
-
-
+    const expenseTotal =
+        calculateExpenses();
+    
     const batchCost =
         ingredientTotal +
         packagingTotal +
-        labor +
-        utilities +
-        misc;
+        expenseTotal;
 
 
     const yieldQty =
