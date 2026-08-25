@@ -1,54 +1,119 @@
 const API_URL =
     'https://script.google.com/macros/s/AKfycbyEzjSbd9Sg1fvHT9tmFTzw57ejkm-KT7O_lCabzxxWrBUB9P0pdUtJEweFRJsklJQX/exec';
 
-
 let masterData = {
-
     ingredients: [],
     recipes: [],
     recipeIngredients: [],
     packaging: [],
     expenses: []
-
 };
 
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    loadMasterlist();
-
     setupEvents();
+
+    loadMasterlist();
 
 });
 
 
 function loadMasterlist() {
 
-    document.getElementById('loading').style.display = 'block';
-
-    document.getElementById('calculator').style.display = 'none';
-
+    showLoading();
 
     const callbackName =
-        'googleSheetCallback_' + Date.now();
+        'bakingCalculatorCallback_' + Date.now();
 
 
     window[callbackName] = function (data) {
 
-        console.log('GOOGLE SHEETS DATA:', data);
-        
+        console.log(
+            'GOOGLE SHEETS DATA:',
+            data
+        );
+
+
         try {
 
-            if (!data.success) {
+            if (!data) {
 
                 throw new Error(
-                    'Google Sheet API returned an error.'
+                    'No data was returned from Google Sheets.'
                 );
 
             }
 
 
-            masterData = data;
+            if (!data.success) {
+
+                throw new Error(
+                    data.error ||
+                    'Google Sheets returned an error.'
+                );
+
+            }
+
+
+            /*
+             * Make sure the expected arrays exist.
+             */
+
+            masterData.ingredients =
+                Array.isArray(data.ingredients)
+                    ? data.ingredients
+                    : [];
+
+
+            masterData.recipes =
+                Array.isArray(data.recipes)
+                    ? data.recipes
+                    : [];
+
+
+            masterData.recipeIngredients =
+                Array.isArray(data.recipeIngredients)
+                    ? data.recipeIngredients
+                    : [];
+
+
+            masterData.packaging =
+                Array.isArray(data.packaging)
+                    ? data.packaging
+                    : [];
+
+
+            masterData.expenses =
+                Array.isArray(data.expenses)
+                    ? data.expenses
+                    : [];
+
+
+            console.log(
+                'Ingredients:',
+                masterData.ingredients
+            );
+
+            console.log(
+                'Recipes:',
+                masterData.recipes
+            );
+
+            console.log(
+                'Recipe Ingredients:',
+                masterData.recipeIngredients
+            );
+
+            console.log(
+                'Packaging:',
+                masterData.packaging
+            );
+
+            console.log(
+                'Expenses:',
+                masterData.expenses
+            );
 
 
             populateRecipes();
@@ -56,29 +121,44 @@ function loadMasterlist() {
             populatePackaging();
 
 
-            document.getElementById('loading')
-                .style.display = 'none';
-
-            document.getElementById('calculator')
-                .style.display = 'block';
+            hideLoading();
 
 
         } catch (error) {
 
-            showError(error.message);
+            console.error(
+                'MASTERLIST ERROR:',
+                error
+            );
+
+
+            showError(
+                error.message
+            );
 
         }
 
 
         delete window[callbackName];
 
-        script.remove();
+        const script =
+            document.getElementById(
+                callbackName
+            );
+
+        if (script) {
+            script.remove();
+        }
 
     };
 
 
     const script =
         document.createElement('script');
+
+
+    script.id =
+        callbackName;
 
 
     script.src =
@@ -92,7 +172,7 @@ function loadMasterlist() {
     script.onerror = function () {
 
         showError(
-            'Unable to connect to Google Sheets.'
+            'Unable to connect to the Google Sheets API.'
         );
 
     };
@@ -105,63 +185,72 @@ function loadMasterlist() {
 
 function setupEvents() {
 
-    document.getElementById('recipeSelect')
+    document
+        .getElementById('recipeSelect')
         .addEventListener(
             'change',
             calculateRecipe
         );
 
 
-    document.getElementById('packagingSelect')
+    document
+        .getElementById('packagingSelect')
         .addEventListener(
             'change',
             calculateTotal
         );
 
 
-    document.getElementById('packagingQty')
+    document
+        .getElementById('packagingQty')
         .addEventListener(
             'input',
             calculateTotal
         );
 
 
-    document.getElementById('labor')
+    document
+        .getElementById('labor')
         .addEventListener(
             'input',
             calculateTotal
         );
 
 
-    document.getElementById('utilities')
+    document
+        .getElementById('utilities')
         .addEventListener(
             'input',
             calculateTotal
         );
 
 
-    document.getElementById('misc')
+    document
+        .getElementById('misc')
         .addEventListener(
             'input',
             calculateTotal
         );
 
 
-    document.getElementById('pricingMethod')
+    document
+        .getElementById('pricingMethod')
         .addEventListener(
             'change',
             calculateTotal
         );
 
 
-    document.getElementById('profitPercent')
+    document
+        .getElementById('profitPercent')
         .addEventListener(
             'input',
             calculateTotal
         );
 
 
-    document.getElementById('refreshButton')
+    document
+        .getElementById('refreshButton')
         .addEventListener(
             'click',
             loadMasterlist
@@ -173,30 +262,36 @@ function setupEvents() {
 function populateRecipes() {
 
     const select =
-        document.getElementById('recipeSelect');
+        document.getElementById(
+            'recipeSelect'
+        );
 
 
     select.innerHTML =
         '<option value="">Select recipe</option>';
 
 
-    masterData.recipes.forEach(function (recipe) {
+    masterData.recipes.forEach(
+        function (recipe) {
 
-        const option =
-            document.createElement('option');
-
-
-        option.value =
-            recipe.recipe_id;
-
-
-        option.textContent =
-            recipe.recipe_name;
+            const option =
+                document.createElement(
+                    'option'
+                );
 
 
-        select.appendChild(option);
+            option.value =
+                recipe.recipe_id;
 
-    });
+
+            option.textContent =
+                recipe.recipe_name;
+
+
+            select.appendChild(option);
+
+        }
+    );
 
 }
 
@@ -204,32 +299,38 @@ function populateRecipes() {
 function populatePackaging() {
 
     const select =
-        document.getElementById('packagingSelect');
+        document.getElementById(
+            'packagingSelect'
+        );
 
 
     select.innerHTML =
         '<option value="">No packaging</option>';
 
 
-    masterData.packaging.forEach(function (item) {
+    masterData.packaging.forEach(
+        function (item) {
 
-        const option =
-            document.createElement('option');
-
-
-        option.value =
-            item.packaging_id;
-
-
-        option.textContent =
-            item.packaging_name +
-            ' - ' +
-            money(item.cost);
+            const option =
+                document.createElement(
+                    'option'
+                );
 
 
-        select.appendChild(option);
+            option.value =
+                item.packaging_id;
 
-    });
+
+            option.textContent =
+                item.packaging_name +
+                ' - ' +
+                money(item.cost);
+
+
+            select.appendChild(option);
+
+        }
+    );
 
 }
 
@@ -237,17 +338,28 @@ function populatePackaging() {
 function calculateRecipe() {
 
     const recipeId =
-        document.getElementById('recipeSelect').value;
+        document.getElementById(
+            'recipeSelect'
+        ).value;
 
 
     if (!recipeId) {
 
-        document.getElementById('yieldQty').value = '';
+        document.getElementById(
+            'yieldQty'
+        ).value = '';
 
-        document.getElementById('yieldUnit').value = '';
 
-        document.getElementById('ingredientList').innerHTML =
+        document.getElementById(
+            'yieldUnit'
+        ).value = '';
+
+
+        document.getElementById(
+            'ingredientList'
+        ).innerHTML =
             '<p class="muted">Select a recipe first.</p>';
+
 
         calculateTotal();
 
@@ -260,8 +372,9 @@ function calculateRecipe() {
         masterData.recipes.find(
             function (item) {
 
-                return String(item.recipe_id) ===
-                    String(recipeId);
+                return String(
+                    item.recipe_id
+                ) === String(recipeId);
 
             }
         );
@@ -272,11 +385,15 @@ function calculateRecipe() {
     }
 
 
-    document.getElementById('yieldQty').value =
+    document.getElementById(
+        'yieldQty'
+    ).value =
         recipe.yield_qty;
 
 
-    document.getElementById('yieldUnit').value =
+    document.getElementById(
+        'yieldUnit'
+    ).value =
         recipe.yield_unit;
 
 
@@ -284,8 +401,9 @@ function calculateRecipe() {
         masterData.recipeIngredients.filter(
             function (item) {
 
-                return String(item.recipe_id) ===
-                    String(recipeId);
+                return String(
+                    item.recipe_id
+                ) === String(recipeId);
 
             }
         );
@@ -294,76 +412,83 @@ function calculateRecipe() {
     let html = '';
 
 
-    recipeItems.forEach(function (item) {
+    recipeItems.forEach(
+        function (item) {
 
-        const ingredient =
-            masterData.ingredients.find(
-                function (ingredient) {
+            const ingredient =
+                masterData.ingredients.find(
+                    function (ingredient) {
 
-                    return String(
-                        ingredient.ingredient_id
-                    ) === String(
-                        item.ingredient_id
-                    );
+                        return String(
+                            ingredient.ingredient_id
+                        ) === String(
+                            item.ingredient_id
+                        );
 
-                }
-            );
+                    }
+                );
 
 
-        if (!ingredient) {
-            return;
+            if (!ingredient) {
+                return;
+            }
+
+
+            const quantity =
+                Number(item.quantity) || 0;
+
+
+            const costPerUnit =
+                Number(
+                    ingredient.cost_per_unit
+                ) || 0;
+
+
+            const cost =
+                quantity * costPerUnit;
+
+
+            html += `
+
+                <div class="ingredient-row">
+
+                    <div>
+
+                        <div class="ingredient-name">
+                            ${ingredient.ingredient_name}
+                        </div>
+
+                        <div class="ingredient-details">
+
+                            ${quantity}
+                            ${item.unit}
+
+                            ×
+
+                            ${money(costPerUnit)}
+
+                        </div>
+
+                    </div>
+
+                    <div class="ingredient-cost">
+
+                        ${money(cost)}
+
+                    </div>
+
+                </div>
+
+            `;
+
         }
+    );
 
 
-        const quantity =
-            Number(item.quantity) || 0;
-
-
-        const costPerUnit =
-            Number(ingredient.cost_per_unit) || 0;
-
-
-        const cost =
-            quantity * costPerUnit;
-
-
-        html += `
-
-            <div class="ingredient-row">
-
-                <div>
-
-                    <div class="ingredient-name">
-                        ${ingredient.ingredient_name}
-                    </div>
-
-                    <div class="ingredient-details">
-
-                        ${quantity}
-                        ${item.unit}
-
-                        ×
-
-                        ${money(costPerUnit)}
-                    </div>
-
-                </div>
-
-                <div class="ingredient-cost">
-
-                    ${money(cost)}
-
-                </div>
-
-            </div>
-
-        `;
-
-    });
-
-
-    document.getElementById('ingredientList')
-        .innerHTML = html || 
+    document.getElementById(
+        'ingredientList'
+    ).innerHTML =
+        html ||
         '<p class="muted">No ingredients found.</p>';
 
 
@@ -375,7 +500,9 @@ function calculateRecipe() {
 function calculateIngredientTotal() {
 
     const recipeId =
-        document.getElementById('recipeSelect').value;
+        document.getElementById(
+            'recipeSelect'
+        ).value;
 
 
     if (!recipeId) {
@@ -387,8 +514,9 @@ function calculateIngredientTotal() {
         masterData.recipeIngredients.filter(
             function (item) {
 
-                return String(item.recipe_id) ===
-                    String(recipeId);
+                return String(
+                    item.recipe_id
+                ) === String(recipeId);
 
             }
         );
@@ -397,39 +525,43 @@ function calculateIngredientTotal() {
     let total = 0;
 
 
-    recipeItems.forEach(function (item) {
+    recipeItems.forEach(
+        function (item) {
 
-        const ingredient =
-            masterData.ingredients.find(
-                function (ingredient) {
+            const ingredient =
+                masterData.ingredients.find(
+                    function (ingredient) {
 
-                    return String(
-                        ingredient.ingredient_id
-                    ) === String(
-                        item.ingredient_id
-                    );
+                        return String(
+                            ingredient.ingredient_id
+                        ) === String(
+                            item.ingredient_id
+                        );
 
-                }
-            );
+                    }
+                );
 
 
-        if (!ingredient) {
-            return;
+            if (!ingredient) {
+                return;
+            }
+
+
+            const quantity =
+                Number(item.quantity) || 0;
+
+
+            const costPerUnit =
+                Number(
+                    ingredient.cost_per_unit
+                ) || 0;
+
+
+            total +=
+                quantity * costPerUnit;
+
         }
-
-
-        const quantity =
-            Number(item.quantity) || 0;
-
-
-        const costPerUnit =
-            Number(ingredient.cost_per_unit) || 0;
-
-
-        total +=
-            quantity * costPerUnit;
-
-    });
+    );
 
 
     return total;
@@ -494,19 +626,25 @@ function calculateTotal() {
 
     const labor =
         Number(
-            document.getElementById('labor').value
+            document.getElementById(
+                'labor'
+            ).value
         ) || 0;
 
 
     const utilities =
         Number(
-            document.getElementById('utilities').value
+            document.getElementById(
+                'utilities'
+            ).value
         ) || 0;
 
 
     const misc =
         Number(
-            document.getElementById('misc').value
+            document.getElementById(
+                'misc'
+            ).value
         ) || 0;
 
 
@@ -520,7 +658,9 @@ function calculateTotal() {
 
     const yieldQty =
         Number(
-            document.getElementById('yieldQty').value
+            document.getElementById(
+                'yieldQty'
+            ).value
         ) || 0;
 
 
@@ -571,40 +711,48 @@ function calculateTotal() {
 
 
     const profitPerUnit =
-        sellingPrice - costPerUnit;
+        sellingPrice -
+        costPerUnit;
 
 
     const batchProfit =
-        profitPerUnit * yieldQty;
+        profitPerUnit *
+        yieldQty;
 
 
-    document.getElementById('ingredientTotal')
-        .textContent =
+    document.getElementById(
+        'ingredientTotal'
+    ).textContent =
         money(ingredientTotal);
 
 
-    document.getElementById('batchCost')
-        .textContent =
+    document.getElementById(
+        'batchCost'
+    ).textContent =
         money(batchCost);
 
 
-    document.getElementById('costPerUnit')
-        .textContent =
+    document.getElementById(
+        'costPerUnit'
+    ).textContent =
         money(costPerUnit);
 
 
-    document.getElementById('sellingPrice')
-        .textContent =
+    document.getElementById(
+        'sellingPrice'
+    ).textContent =
         money(sellingPrice);
 
 
-    document.getElementById('profitPerUnit')
-        .textContent =
+    document.getElementById(
+        'profitPerUnit'
+    ).textContent =
         money(profitPerUnit);
 
 
-    document.getElementById('batchProfit')
-        .textContent =
+    document.getElementById(
+        'batchProfit'
+    ).textContent =
         money(batchProfit);
 
 }
@@ -627,13 +775,59 @@ function money(value) {
 }
 
 
+function showLoading() {
+
+    document.getElementById(
+        'loading'
+    ).style.display = 'block';
+
+
+    document.getElementById(
+        'calculator'
+    ).style.display = 'none';
+
+
+    document.getElementById(
+        'loading'
+    ).innerHTML =
+        'Loading masterlist...';
+
+}
+
+
+function hideLoading() {
+
+    document.getElementById(
+        'loading'
+    ).style.display = 'none';
+
+
+    document.getElementById(
+        'calculator'
+    ).style.display = 'block';
+
+}
+
+
 function showError(message) {
 
-    document.getElementById('loading').innerHTML = `
+    document.getElementById(
+        'loading'
+    ).style.display = 'block';
+
+
+    document.getElementById(
+        'calculator'
+    ).style.display = 'none';
+
+
+    document.getElementById(
+        'loading'
+    ).innerHTML = `
 
         <div class="error">
 
-            <strong>Error</strong>
+            <strong>Unable to load masterlist</strong>
 
             <br><br>
 
