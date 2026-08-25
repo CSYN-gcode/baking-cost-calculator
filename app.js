@@ -18,7 +18,7 @@ let masterData = {
 document.addEventListener('DOMContentLoaded', function () {
 
     setupEvents();
-
+    showCalculator();
     loadMasterlist();
 
 });
@@ -718,10 +718,16 @@ function loadMasterlist() {
                 masterData.expenses
             );
 
+            // Refresh calculator controls
             populateRecipes();
             populatePackaging();
             populateExpenses();
             // hideLoading();
+
+            // Refresh admin tables ONLY if admin is currently open
+            if (adminAuthenticated) {
+                loadAdminTables();
+            }
 
         } catch (error) {
 
