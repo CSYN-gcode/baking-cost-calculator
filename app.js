@@ -632,7 +632,7 @@ function adminLogin() {
 
 function loadMasterlist() {
 
-    showLoading();
+    // showLoading();
 
     const callbackName =
         'bakingCalculatorCallback_' + Date.now();
@@ -721,7 +721,7 @@ function loadMasterlist() {
             populateRecipes();
             populatePackaging();
             populateExpenses();
-            hideLoading();
+            // hideLoading();
 
         } catch (error) {
 
