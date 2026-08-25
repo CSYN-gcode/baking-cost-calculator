@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Baking Cost Calculator</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+
+        <h1>🥐 Baking Cost Calculator</h1>
+
+        <p>
+            Calculate your pastry production cost and selling price
+        </p>
+
+    </div>
+
+
+    <div id="loading" class="loading">
+
+        Loading masterlist...
+
+    </div>
+
+
+    <div id="calculator" style="display:none;">
+
+
+        <!-- RECIPE -->
+
+        <div class="card">
+
+            <h2>Recipe</h2>
+
+            <label>
+                Product / Recipe
+            </label>
+
+            <select id="recipeSelect">
+
+                <option value="">
+                    Select recipe
+                </option>
+
+            </select>
+
+
+            <div class="row">
+
+                <div>
+
+                    <label>
+                        Batch Yield
+                    </label>
+
+                    <input
+                        type="number"
+                        id="yieldQty"
+                        readonly
+                    >
+
+                </div>
+
+                <div>
+
+                    <label>
+                        Unit
+                    </label>
+
+                    <input
+                        type="text"
+                        id="yieldUnit"
+                        readonly
+                    >
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- INGREDIENTS -->
+
+        <div class="card">
+
+            <h2>Ingredients</h2>
+
+            <div id="ingredientList">
+
+                <p class="muted">
+                    Select a recipe first.
+                </p>
+
+            </div>
+
+
+            <div class="total-row">
+
+                <span>
+                    Ingredient Cost
+                </span>
+
+                <strong id="ingredientTotal">
+                    ₱0.00
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- OTHER COSTS -->
+
+        <div class="card">
+
+            <h2>Other Costs</h2>
+
+
+            <label>
+                Packaging
+            </label>
+
+            <select id="packagingSelect">
+
+                <option value="">
+                    No packaging
+                </option>
+
+            </select>
+
+
+            <label>
+                Packaging Quantity
+            </label>
+
+            <input
+                type="number"
+                id="packagingQty"
+                value="1"
+                min="0"
+                step="1"
+            >
+
+
+            <label>
+                Labor
+            </label>
+
+            <input
+                type="number"
+                id="labor"
+                value="0"
+                min="0"
+                step="0.01"
+            >
+
+
+            <label>
+                Electricity / Gas
+            </label>
+
+            <input
+                type="number"
+                id="utilities"
+                value="0"
+                min="0"
+                step="0.01"
+            >
+
+
+            <label>
+                Miscellaneous
+            </label>
+
+            <input
+                type="number"
+                id="misc"
+                value="0"
+                min="0"
+                step="0.01"
+            >
+
+        </div>
+
+
+        <!-- PROFIT -->
+
+        <div class="card">
+
+            <h2>Pricing</h2>
+
+
+            <label>
+                Pricing Method
+            </label>
+
+            <select id="pricingMethod">
+
+                <option value="margin">
+                    Profit Margin
+                </option>
+
+                <option value="markup">
+                    Markup
+                </option>
+
+            </select>
+
+
+            <label>
+                Percentage
+            </label>
+
+            <div class="percentage-input">
+
+                <input
+                    type="number"
+                    id="profitPercent"
+                    value="30"
+                    min="0"
+                    max="99.99"
+                    step="0.01"
+                >
+
+                <span>%</span>
+
+            </div>
+
+        </div>
+
+
+        <!-- RESULT -->
+
+        <div class="result-card">
+
+            <div class="result-line">
+
+                <span>
+                    Total Batch Cost
+                </span>
+
+                <strong id="batchCost">
+                    ₱0.00
+                </strong>
+
+            </div>
+
+
+            <div class="result-line">
+
+                <span>
+                    Cost Per Unit
+                </span>
+
+                <strong id="costPerUnit">
+                    ₱0.00
+                </strong>
+
+            </div>
+
+
+            <hr>
+
+
+            <div class="selling-price">
+
+                <span>
+                    Suggested Selling Price
+                </span>
+
+                <strong id="sellingPrice">
+                    ₱0.00
+                </strong>
+
+            </div>
+
+
+            <div class="result-line">
+
+                <span>
+                    Estimated Profit / Unit
+                </span>
+
+                <strong id="profitPerUnit">
+                    ₱0.00
+                </strong>
+
+            </div>
+
+
+            <div class="result-line">
+
+                <span>
+                    Estimated Batch Profit
+                </span>
+
+                <strong id="batchProfit">
+                    ₱0.00
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <button
+            id="refreshButton"
+            class="refresh-button"
+        >
+            🔄 Refresh Masterlist
+        </button>
+
+
+    </div>
+
+</div>
+
+
+<script src="app.js"></script>
+
+</body>
+
+</html>
