@@ -71,6 +71,135 @@ function populateIngredientsAdmin() {
     );
 }
 
+function populateRecipesAdmin() {
+
+    const tbody =
+        document.getElementById(
+            'recipesAdminTable'
+        );
+
+    if (!tbody) {
+        return;
+    }
+
+    tbody.innerHTML = '';
+
+    masterData.recipes.forEach(function(recipe) {
+
+        const tr =
+            document.createElement('tr');
+
+        tr.innerHTML = `
+
+            <td>
+                ${recipe.recipe_id}
+            </td>
+
+            <td>
+                ${recipe.recipe_name}
+            </td>
+
+            <td>
+                ${recipe.yield_qty}
+            </td>
+
+            <td>
+                ${recipe.yield_unit}
+            </td>
+
+            <td>
+                <button
+                    type="button"
+                    class="btn btn-small btn-primary"
+                    onclick="openAdminModal('recipe', 'edit', '${recipe.recipe_id}')"
+                >
+                    Edit
+                </button>
+
+            </td>
+
+        `;
+
+        tbody.appendChild(tr);
+
+    });
+
+}
+
+function populateRecipeIngredientsAdmin() {
+
+    const tbody =
+        document.getElementById(
+            'recipeIngredientsAdminTable'
+        );
+
+    if (!tbody) {
+        return;
+    }
+
+    tbody.innerHTML = '';
+
+    masterData.recipeIngredients
+        .forEach(function(item) {
+
+            const recipe =
+                masterData.recipes.find(
+                    r =>
+                        String(r.recipe_id) ===
+                        String(item.recipe_id)
+                );
+
+            const ingredient =
+                masterData.ingredients.find(
+                    i =>
+                        String(i.ingredient_id) ===
+                        String(item.ingredient_id)
+                );
+
+            const tr =
+                document.createElement('tr');
+
+            tr.innerHTML = `
+                <td>
+                    ${recipe
+                        ? recipe.recipe_name
+                        : item.recipe_id}
+                </td>
+                <td>
+                    ${ingredient
+                        ? ingredient.ingredient_name
+                        : item.ingredient_id}
+                </td>
+                <td>
+                    ${item.quantity}
+                </td>
+                <td>
+                    ${item.unit}
+                </td>
+                <td>
+                    ${item.notes || ''}
+                </td>
+                <td>
+                    <button
+                        type="button"
+                        class="btn btn-sm btn-outline-primary"
+                        onclick="openAdminModal('recipeIngredients', 'edit',
+                            '${item.recipe_id}',
+                            '${item.ingredient_id}'
+                        )"
+                    >
+                        Edit
+                    </button>
+
+                </td>
+
+            `;
+
+            tbody.appendChild(tr);
+
+        });
+}
+
 function populatePackagingAdmin() {
     const tbody =
         document.getElementById(
@@ -806,7 +935,6 @@ function adminLogin() {
                 document
                     .getElementById('adminDashboard')
                     .style.display = 'block';
-
 
                 loadAdminTables();
 
@@ -2358,144 +2486,6 @@ function getAdminForm(
     }
 
     return '';
-}
-
-function populateRecipesAdmin() {
-
-    const tbody =
-        document.getElementById(
-            'recipesAdminTable'
-        );
-
-    if (!tbody) {
-        return;
-    }
-
-    tbody.innerHTML = '';
-
-    masterData.recipes.forEach(function(recipe) {
-
-        const tr =
-            document.createElement('tr');
-
-        tr.innerHTML = `
-
-            <td>
-                ${recipe.recipe_id}
-            </td>
-
-            <td>
-                ${recipe.recipe_name}
-            </td>
-
-            <td>
-                ${recipe.yield_qty}
-            </td>
-
-            <td>
-                ${recipe.yield_unit}
-            </td>
-
-            <td>
-
-                <button
-                    type="button"
-                    class="btn btn-sm btn-outline-primary"
-                    onclick="editRecipe('${recipe.recipe_id}')"
-                >
-                    Edit
-                </button>
-
-            </td>
-
-        `;
-
-        tbody.appendChild(tr);
-
-    });
-
-}
-
-function populateRecipeIngredientsAdmin() {
-
-    const tbody =
-        document.getElementById(
-            'recipeIngredientsAdminTable'
-        );
-
-    if (!tbody) {
-        return;
-    }
-
-    tbody.innerHTML = '';
-
-    masterData.recipeIngredients
-        .forEach(function(item) {
-
-            const recipe =
-                masterData.recipes.find(
-                    r =>
-                        String(r.recipe_id) ===
-                        String(item.recipe_id)
-                );
-
-            const ingredient =
-                masterData.ingredients.find(
-                    i =>
-                        String(i.ingredient_id) ===
-                        String(item.ingredient_id)
-                );
-
-            const tr =
-                document.createElement('tr');
-
-            tr.innerHTML = `
-
-                <td>
-                    ${recipe
-                        ? recipe.recipe_name
-                        : item.recipe_id}
-                </td>
-
-                <td>
-                    ${ingredient
-                        ? ingredient.ingredient_name
-                        : item.ingredient_id}
-                </td>
-
-                <td>
-                    ${item.quantity}
-                </td>
-
-                <td>
-                    ${item.unit}
-                </td>
-
-                <td>
-                    ${item.notes || ''}
-                </td>
-
-                <td>
-
-                    <button
-                        type="button"
-                        class="btn btn-sm btn-outline-primary"
-                        onclick="editRecipeIngredient(
-                            '${item.recipe_id}',
-                            '${item.ingredient_id}'
-                        )"
-                    >
-                        Edit
-                    </button>
-
-                </td>
-
-            `;
-
-            tbody.appendChild(tr);
-
-        });
-
 }
 
 function closeAdminModal() {
