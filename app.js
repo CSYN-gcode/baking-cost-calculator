@@ -855,53 +855,38 @@ function switchAdminTab(
 }
 
 function adminLogin() {
-
     const pin =
-        document
-            .getElementById('adminPin')
-            .value
-            .trim();
-
+        document.getElementById('adminPin').value.trim();
 
     if (!pin) {
-
         showAdminLoginError(
             'Please enter the admin PIN.'
         );
-
         return;
-
     }
-
 
     const callbackName =
         'adminLoginCallback_' +
         Date.now();
 
-
     window[callbackName] =
         function(data) {
-
+            
             console.log(
                 'ADMIN LOGIN:',
                 data
             );
 
-
             if (
                 data &&
                 data.success
             ) {
-
                 adminAuthenticated = true;
-
                 adminPin = pin;
-
 
                 document
                     .getElementById('adminLogin')
                     .style.display = 'none';
-
 
                 document
                     .getElementById('adminDashboard')
@@ -910,26 +895,17 @@ function adminLogin() {
 
                 loadAdminTables();
 
-            }
-
-            else {
-
+            }else{
                 showAdminLoginError(
                     data.error ||
                     'Invalid PIN.'
                 );
-
             }
 
-
             delete window[callbackName];
-
         };
 
-
-    const script =
-        document.createElement('script');
-
+    const script = document.createElement('script');
 
     script.src =
     API_URL +
