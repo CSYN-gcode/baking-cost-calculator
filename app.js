@@ -1161,7 +1161,6 @@ function setupEvents() {
             );
         });
     
-    
     document
         .getElementById('addExpenseButton')
         .addEventListener('click', function() {
@@ -1178,7 +1177,6 @@ function setupEvents() {
             'click',
             closeAdminModal
         );
-    
     
     document
         .getElementById('adminModalCancel')
@@ -1848,30 +1846,30 @@ function money(value) {
 
 }
 
-function showLoading() {
-    document.getElementById(
-        'loading'
-    ).style.display = 'block';
+// function showLoading() {
+//     document.getElementById(
+//         'loading'
+//     ).style.display = 'block';
 
-    document.getElementById(
-        'calculator'
-    ).style.display = 'none';
+//     document.getElementById(
+//         'calculator'
+//     ).style.display = 'none';
 
-    document.getElementById(
-        'loading'
-    ).innerHTML =
-        'Loading masterlist...';
-}
+//     document.getElementById(
+//         'loading'
+//     ).innerHTML =
+//         'Loading masterlist...';
+// }
 
-function hideLoading() {
-    document.getElementById(
-        'loading'
-    ).style.display = 'none';
+// function hideLoading() {
+//     document.getElementById(
+//         'loading'
+//     ).style.display = 'none';
 
-    document.getElementById(
-        'calculator'
-    ).style.display = 'block';
-}
+//     document.getElementById(
+//         'calculator'
+//     ).style.display = 'block';
+// }
 
 function showAdmin() {
     document
@@ -2201,31 +2199,22 @@ function adminLogout() {
 }
 
 function showError(message) {
-
-    document.getElementById(
-        'loading'
-    ).style.display = 'block';
-
+    // document.getElementById(
+    //     'loading'
+    // ).style.display = 'block';
 
     document.getElementById(
         'calculator'
     ).style.display = 'none';
 
+    // document.getElementById(
+    //     'loading'
+    // ).innerHTML = `
 
-    document.getElementById(
-        'loading'
-    ).innerHTML = `
-
-        <div class="error">
-
-            <strong>Unable to load masterlist</strong>
-
-            <br><br>
-
-            ${message}
-
-        </div>
-
-    `;
-
+    //     <div class="error">
+    //         <strong>Unable to load masterlist</strong>
+    //         <br><br>
+    //         ${message}
+    //     </div>
+    // `;
 }
