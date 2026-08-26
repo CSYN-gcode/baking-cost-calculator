@@ -945,7 +945,19 @@ function adminLogin() {
      */
 
     document.body.appendChild(script);
+}
 
+function showAdminLoginError(message) {
+    const error =
+        document.getElementById('adminLoginError');
+
+    if (!error) {
+        alert(message);
+        return;
+    }
+
+    error.textContent = message;
+    error.style.display = 'block';
 }
 
 function loadMasterlist() {
