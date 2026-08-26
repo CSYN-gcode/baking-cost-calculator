@@ -29,6 +29,8 @@ function loadAdminTables() {
     populateIngredientsAdmin();
     populatePackagingAdmin();
     populateExpensesAdmin();
+    populateRecipesAdmin();
+    populateRecipeIngredientsAdmin();
 }
 
 function populateIngredientsAdmin() {
@@ -940,9 +942,6 @@ function loadMasterlist() {
             populatePackaging();
             populateExpenses();
             // hideLoading();
-
-            loadRecipesAdminTable();
-            loadRecipeIngredientsAdminTable();
 
             // Refresh admin tables ONLY if admin is currently open
             if (adminAuthenticated) {
@@ -2361,7 +2360,7 @@ function getAdminForm(
     return '';
 }
 
-function loadRecipesAdminTable() {
+function populateRecipesAdmin() {
 
     const tbody =
         document.getElementById(
@@ -2417,7 +2416,7 @@ function loadRecipesAdminTable() {
 
 }
 
-function loadRecipeIngredientsAdminTable() {
+function populateRecipeIngredientsAdmin() {
 
     const tbody =
         document.getElementById(
