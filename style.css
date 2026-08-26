@@ -388,3 +388,106 @@ input:read-only {
     }
 
 }
+
+.admin-modal {
+    position: fixed;
+    inset: 0;
+
+    background: rgba(0,0,0,.45);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    z-index: 9999;
+}
+
+.admin-modal-content {
+
+    width: 100%;
+    max-width: 500px;
+
+    background: white;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 10px 40px rgba(0,0,0,.2);
+
+    overflow: hidden;
+}
+
+.admin-modal-header {
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 18px 20px;
+
+    border-bottom: 1px solid #eee;
+}
+
+.admin-modal-header h3 {
+    margin: 0;
+}
+
+.modal-close {
+
+    border: 0;
+    background: transparent;
+
+    font-size: 28px;
+
+    cursor: pointer;
+
+    color: #777;
+}
+
+#adminModalBody {
+    padding: 20px;
+}
+
+#adminModalBody .form-group {
+    margin-bottom: 15px;
+}
+
+#adminModalBody label {
+
+    display: block;
+
+    margin-bottom: 6px;
+
+    font-weight: 600;
+}
+
+#adminModalBody input,
+#adminModalBody select {
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 11px;
+
+    border: 1px solid #ddd;
+
+    border-radius: 8px;
+
+    font-size: 15px;
+}
+
+.admin-modal-footer {
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 8px;
+
+    padding: 15px 20px;
+
+    border-top: 1px solid #eee;
+}
