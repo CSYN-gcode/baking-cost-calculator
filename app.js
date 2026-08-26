@@ -227,195 +227,501 @@ function populateExpensesAdmin() {
 
 }
 
-function editIngredient(id) {
+function saveAdminModal() {
 
-    const item =
-        masterData.ingredients.find(
-            function(x) {
+    if (adminModalType === 'ingredient') {
 
-                return String(
-                    x.ingredient_id
-                ) === String(id);
+        saveIngredient();
 
+        return;
+
+    }
+
+
+    if (adminModalType === 'packaging') {
+
+        savePackaging();
+
+        return;
+
+    }
+
+    if (adminModalType === 'expense') {
+
+        saveExpense();
+
+        return;
+    }
+}
+
+function saveIngredient() {
+
+    const name =
+        document
+            .getElementById(
+                'adminIngredientName'
+            )
+            .value
+            .trim();
+
+    const unit =
+        document
+            .getElementById(
+                'adminIngredientUnit'
+            )
+            .value;
+
+
+    const qty =
+        Number(
+            document
+                .getElementById(
+                    'adminPurchaseQty'
+                )
+                .value
+        );
+
+    const price =
+        Number(
+            document
+                .getElementById(
+                    'adminPurchasePrice'
+                )
+                .value
+        );
+
+    if (
+        !name ||
+        !unit ||
+        qty <= 0 ||
+        price < 0
+    ) {
+
+        alert(
+            'Please complete all ingredient fields.'
+        );
+
+        return;
+
+    }
+
+    if (
+        adminModalMode === 'add'
+    ) {
+
+        sendAdminAdd(
+            'Ingredients',
+            {
+                ingredient_name: name,
+                unit: unit,
+                purchase_qty: qty,
+                purchase_price: price
             }
         );
 
-
-    if (!item) {
-        return;
     }
 
+    else {
 
+        updateMasterlist(
+            'Ingredients',
+            {
+                id: adminModalId,
+                ingredient_name: name,
+                unit: unit,
+                purchase_qty: qty,
+                purchase_price: price
+            }
+        );
+
+    }
+}
+
+function savePackaging() {
     const name =
-        prompt(
-            'Ingredient name:',
-            item.ingredient_name
+        document
+            .getElementById(
+                'adminPackagingName'
+            )
+            .value
+            .trim();
+
+    const unit =
+        document
+            .getElementById(
+                'adminPackagingUnit'
+            )
+            .value
+            .trim();
+
+    const cost =
+        Number(
+            document
+                .getElementById(
+                    'adminPackagingCost'
+                )
+                .value
         );
 
-
-    if (name === null) {
+    if (
+        !name ||
+        !unit ||
+        cost < 0
+    ) {
+        alert(
+            'Please complete all packaging fields.'
+        );
         return;
     }
 
+    const data = {
+        id: adminModalId,
+        packaging_name: name,
+        unit: unit,
+        cost: cost
+    };
 
-    const quantity =
-        prompt(
-            'Purchase quantity (' +
-            item.unit +
-            '):',
-            item.purchase_qty
+    if (
+        adminModalMode === 'add'
+    ) {
+        delete data.id;
+
+        sendAdminAdd(
+            'Packaging',
+            data
         );
 
+    }else {
 
-    if (quantity === null) {
+        updateMasterlist(
+            'Packaging',
+            data
+        );
+    }
+}
+
+function saveExpense() {
+    const name =
+        document
+            .getElementById(
+                'adminExpenseName'
+            )
+            .value
+            .trim();
+
+    const unit =
+        document
+            .getElementById(
+                'adminExpenseUnit'
+            )
+            .value
+            .trim();
+
+    const cost =
+        Number(
+            document
+                .getElementById(
+                    'adminExpenseCost'
+                )
+                .value
+        );
+
+    if (
+        !name ||
+        !unit ||
+        cost < 0
+    ) {
+        alert(
+            'Please complete all expense fields.'
+        );
         return;
     }
 
+    const data = {
+        id: adminModalId,
+        expense_name: name,
+        unit: unit,
+        cost: cost
+    };
 
-    const price =
-        prompt(
-            'Purchase price:',
-            item.purchase_price
+    if (
+        adminModalMode === 'add'
+    ) {
+        delete data.id;
+
+        sendAdminAdd(
+            'Expenses',
+            data
         );
-
-
-    if (price === null) {
-        return;
+    }else {
+        updateMasterlist(
+            'Expenses',
+            data
+        );
     }
+}
 
+function sendAdminAdd(
+    sheet,
+    data
+) {
+    const callbackName =
+        'addCallback_' +
+        Date.now();
 
-    updateMasterlist(
-        'Ingredients',
-        {
-            id: item.ingredient_id,
+    window[callbackName] =
+        function(response) {
+            console.log(
+                'ADD RESPONSE:',
+                response
+            );
 
-            ingredient_name: name,
+            if (
+                response &&
+                response.success
+            ) {
+                closeAdminModal();
 
-            unit: item.unit,
+                alert(
+                    'Added successfully!'
+                );
 
-            purchase_qty: quantity,
+                loadMasterlist();
+            }else {
+                alert(
+                    response.error ||
+                    'Unable to add item.'
+                );
+            }
 
-            purchase_price: price
-        }
+            delete window[callbackName];
+        };
+
+    const params =
+        new URLSearchParams();
+
+    params.append(
+        'action',
+        'add'
     );
 
+    params.append(
+        'pin',
+        adminPin
+    );
+
+    params.append(
+        'sheet',
+        sheet
+    );
+
+    Object.keys(data)
+        .forEach(function(key) {
+
+            params.append(
+                key,
+                data[key]
+            );
+
+        });
+
+    params.append(
+        'callback',
+        callbackName
+    );
+
+    const script =
+        document.createElement('script');
+
+    script.src =
+        API_URL +
+        '?' +
+        params.toString();
+
+    document.body.appendChild(
+        script
+    );
+}
+
+function editIngredient(id) {
+    openAdminModal(
+        'ingredient',
+        'edit',
+        id
+    );
 }
 
 function editPackaging(id) {
-
-    const item =
-        masterData.packaging.find(
-            function(x) {
-
-                return String(
-                    x.packaging_id
-                ) === String(id);
-
-            }
-        );
-
-
-    if (!item) {
-        return;
-    }
-
-
-    const name =
-        prompt(
-            'Packaging name:',
-            item.packaging_name
-        );
-
-
-    if (name === null) {
-        return;
-    }
-
-
-    const cost =
-        prompt(
-            'Packaging cost:',
-            item.cost
-        );
-
-
-    if (cost === null) {
-        return;
-    }
-
-
-    updateMasterlist(
-        'Packaging',
-        {
-            id: item.packaging_id,
-
-            packaging_name: name,
-
-            unit: item.unit,
-
-            cost: cost
-        }
+    openAdminModal(
+        'packaging',
+        'edit',
+        id
     );
-
 }
 
 function editExpense(id) {
-
-    const item =
-        masterData.expenses.find(
-            function(x) {
-
-                return String(
-                    x.expense_id
-                ) === String(id);
-
-            }
-        );
-
-
-    if (!item) {
-        return;
-    }
-
-
-    const name =
-        prompt(
-            'Expense name:',
-            item.expense_name
-        );
-
-
-    if (name === null) {
-        return;
-    }
-
-
-    const cost =
-        prompt(
-            'Cost per ' + item.unit + ':',
-            item.cost
-        );
-
-
-    if (cost === null) {
-        return;
-    }
-
-
-    updateMasterlist(
-        'Expenses',
-        {
-            id: item.expense_id,
-
-            expense_name: name,
-
-            unit: item.unit,
-
-            cost: cost
-        }
+    openAdminModal(
+        'expense',
+        'edit',
+        id
     );
-
 }
+
+// function editIngredient(id) {
+//     const item =
+//         masterData.ingredients.find(
+//             function(x) {
+
+//                 return String(
+//                     x.ingredient_id
+//                 ) === String(id);
+
+//             }
+//         );
+
+
+//     if (!item) {
+//         return;
+//     }
+
+//     const name =
+//         prompt(
+//             'Ingredient name:',
+//             item.ingredient_name
+//         );
+
+//     if (name === null) {
+//         return;
+//     }
+
+//     const quantity =
+//         prompt(
+//             'Purchase quantity (' +
+//             item.unit +
+//             '):',
+//             item.purchase_qty
+//         );
+
+//     if (quantity === null) {
+//         return;
+//     }
+
+//     const price =
+//         prompt(
+//             'Purchase price:',
+//             item.purchase_price
+//         );
+
+//     if (price === null) {
+//         return;
+//     }
+
+//     updateMasterlist(
+//         'Ingredients',
+//         {
+//             id: item.ingredient_id,
+//             ingredient_name: name,
+//             unit: item.unit,
+//             purchase_qty: quantity,
+//             purchase_price: price
+//         }
+//     );
+// }
+
+// function editPackaging(id) {
+//     const item =
+//         masterData.packaging.find(
+//             function(x) {
+//                 return String(
+//                     x.packaging_id
+//                 ) === String(id);
+//             }
+//         );
+
+//     if (!item) {
+//         return;
+//     }
+
+//     const name =
+//         prompt(
+//             'Packaging name:',
+//             item.packaging_name
+//         );
+
+//     if (name === null) {
+//         return;
+//     }
+
+//     const cost =
+//         prompt(
+//             'Packaging cost:',
+//             item.cost
+//         );
+
+//     if (cost === null) {
+//         return;
+//     }
+
+//     updateMasterlist(
+//         'Packaging',
+//         {
+//             id: item.packaging_id,
+//             packaging_name: name,
+//             unit: item.unit,
+//             cost: cost
+//         }
+//     );
+// }
+
+// function editExpense(id) {
+//     const item =
+//         masterData.expenses.find(
+//             function(x) {
+
+//                 return String(
+//                     x.expense_id
+//                 ) === String(id);
+
+//             }
+//         );
+
+//     if (!item) {
+//         return;
+//     }
+
+//     const name =
+//         prompt(
+//             'Expense name:',
+//             item.expense_name
+//         );
+
+//     if (name === null) {
+//         return;
+//     }
+
+//     const cost =
+//         prompt(
+//             'Cost per ' + item.unit + ':',
+//             item.cost
+//         );
+
+//     if (cost === null) {
+//         return;
+//     }
+
+//     updateMasterlist(
+//         'Expenses',
+//         {
+//             id: item.expense_id,
+
+//             expense_name: name,
+
+//             unit: item.unit,
+
+//             cost: cost
+//         }
+//     );
+// }
 
 function updateMasterlist(
     sheet,
