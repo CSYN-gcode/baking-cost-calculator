@@ -375,56 +375,38 @@ function saveRecipe() {
             )
             .value;
 
-
     if (
         !name ||
         yieldQty <= 0 ||
         !yieldUnit
     ) {
-
         alert(
             'Please complete all recipe fields.'
         );
-
         return;
-
     }
 
-
     const data = {
-
         recipe_name: name,
-
         yield_qty: yieldQty,
-
         yield_unit: yieldUnit
 
     };
 
-
     if (
         adminModalMode === 'add'
     ) {
-
         sendAdminAdd(
             'Recipes',
             data
         );
-
-    }
-
-    else {
-
-        data.id =
-            adminModalId;
-
+    }else {
+        data.id = adminModalId;
         updateMasterlist(
             'Recipes',
             data
         );
-
     }
-
 }
 
 function savePackaging() {
@@ -2045,7 +2027,16 @@ function getAdminForm(
                 );
         }
         
-
+        if (type === 'recipe') {
+            item =
+                masterData.recipe.find(
+                    x =>
+                        String(
+                            x.recipe_id
+                        ) === String(id)
+                );
+        }
+        
         if (type === 'packaging') {
             item =
                 masterData.packaging.find(
