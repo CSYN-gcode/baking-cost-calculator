@@ -1962,7 +1962,6 @@ function openAdminModal(
     adminModalMode = mode;
     adminModalId = id;
 
-
     const title =
         document.getElementById(
             'adminModalTitle'
