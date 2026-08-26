@@ -147,6 +147,11 @@ function saveAdminModal() {
         return;
     }
 
+    if (adminModalType === 'recipe') {
+        saveRecipe();
+        return;    
+    }
+
     if (adminModalType === 'packaging') {
         savePackaging();
         return;
@@ -211,6 +216,84 @@ function saveIngredient() {
             }
         );
     }
+}
+
+function saveRecipe() {
+
+    const name =
+        document
+            .getElementById(
+                'adminRecipeName'
+            )
+            .value
+            .trim();
+
+    const yieldQty =
+        Number(
+            document
+                .getElementById(
+                    'adminRecipeYieldQty'
+                )
+                .value
+        );
+
+    const yieldUnit =
+        document
+            .getElementById(
+                'adminRecipeYieldUnit'
+            )
+            .value;
+
+
+    if (
+        !name ||
+        yieldQty <= 0 ||
+        !yieldUnit
+    ) {
+
+        alert(
+            'Please complete all recipe fields.'
+        );
+
+        return;
+
+    }
+
+
+    const data = {
+
+        recipe_name: name,
+
+        yield_qty: yieldQty,
+
+        yield_unit: yieldUnit
+
+    };
+
+
+    if (
+        adminModalMode === 'add'
+    ) {
+
+        sendAdminAdd(
+            'Recipes',
+            data
+        );
+
+    }
+
+    else {
+
+        data.id =
+            adminModalId;
+
+        updateMasterlist(
+            'Recipes',
+            data
+        );
+
+    }
+
 }
 
 function savePackaging() {
@@ -882,6 +965,9 @@ function loadMasterlist() {
             populateExpenses();
             // hideLoading();
 
+            loadRecipesAdminTable();
+            loadRecipeIngredientsAdminTable();
+
             // Refresh admin tables ONLY if admin is currently open
             if (adminAuthenticated) {
                 loadAdminTables();
@@ -1038,6 +1124,18 @@ function setupEvents() {
                 'add'
             );
         });
+
+    document
+    .getElementById('addRecipeButton')
+    .addEventListener(
+        'click',
+        function() {
+            openAdminModal(
+                'recipe',
+                'add'
+            );
+        }
+    );
     
     document
         .getElementById('addPackagingButton')
@@ -1815,6 +1913,14 @@ function getAdminTypeName(type) {
         return 'Expense';
     }
 
+    if (type === 'recipe') {
+        return 'Recipe';
+    }
+
+    if (type === 'recipeIngredient') {
+        return 'Recipe Ingredient';
+    }
+
     return 'Item';
 }
 
@@ -1835,6 +1941,7 @@ function getAdminForm(
                         ) === String(id)
                 );
         }
+        
 
         if (type === 'packaging') {
             item =
@@ -1936,6 +2043,246 @@ function getAdminForm(
         `;
     }
 
+    if (type === 'recipe') {
+        let item = null;
+    
+        if (mode === 'edit') {
+    
+            item =
+                masterData.recipes.find(
+                    x =>
+                        String(x.recipe_id) ===
+                        String(id)
+                );
+    
+        }
+    
+        return `
+    
+            <div class="form-group">
+    
+                <label>
+                    Recipe Name
+                </label>
+    
+                <input
+                    type="text"
+                    id="adminRecipeName"
+                    value="${item?.recipe_name || ''}"
+                    placeholder="e.g. Chocolate Cake"
+                >
+    
+            </div>
+    
+    
+            <div class="form-group">
+    
+                <label>
+                    Yield Quantity
+                </label>
+    
+                <input
+                    type="number"
+                    id="adminRecipeYieldQty"
+                    value="${item?.yield_qty || ''}"
+                    min="0"
+                    step="0.01"
+                >
+    
+            </div>
+    
+    
+            <div class="form-group">
+    
+                <label>
+                    Yield Unit
+                </label>
+    
+                <select id="adminRecipeYieldUnit">
+    
+                    <option value="pcs"
+                        ${item?.yield_unit === 'pcs'
+                            ? 'selected'
+                            : ''}>
+                        Pieces
+                    </option>
+    
+                    <option value="loaves"
+                        ${item?.yield_unit === 'loaves'
+                            ? 'selected'
+                            : ''}>
+                        Loaves
+                    </option>
+    
+                    <option value="cakes"
+                        ${item?.yield_unit === 'cakes'
+                            ? 'selected'
+                            : ''}>
+                        Cakes
+                    </option>
+    
+                    <option value="boxes"
+                        ${item?.yield_unit === 'boxes'
+                            ? 'selected'
+                            : ''}>
+                        Boxes
+                    </option>
+    
+                </select>
+    
+            </div>
+    
+        `;
+    }
+
+    if (type === 'recipeIngredient') {
+        let item = null;
+    
+        if (mode === 'edit') {
+    
+            item =
+                masterData.recipeIngredients.find(
+                    x =>
+                        String(x.recipe_id) ===
+                            String(id.recipe_id) &&
+                        String(x.ingredient_id) ===
+                            String(id.ingredient_id)
+                );
+    
+        }
+
+        const recipeOptions =
+            masterData.recipes
+                .map(function(recipe) {
+    
+                    return `
+                        <option
+                            value="${recipe.recipe_id}"
+                            ${item?.recipe_id === recipe.recipe_id
+                                ? 'selected'
+                                : ''}
+                        >
+                            ${recipe.recipe_name}
+                        </option>
+                    `;
+    
+                })
+                .join('');
+    
+        const ingredientOptions =
+            masterData.ingredients
+                .map(function(ingredient) {
+    
+                    return `
+                        <option
+                            value="${ingredient.ingredient_id}"
+                            ${item?.ingredient_id === ingredient.ingredient_id
+                                ? 'selected'
+                                : ''}
+                        >
+                            ${ingredient.ingredient_name}
+                        </option>
+                    `;
+    
+                })
+                .join('');
+    
+    
+        return `
+    
+            <div class="form-group">
+    
+                <label>
+                    Recipe
+                </label>
+    
+                <select
+                    id="adminRecipeIngredientRecipe"
+                >
+    
+                    <option value="">
+                        Select Recipe
+                    </option>
+    
+                    ${recipeOptions}
+    
+                </select>
+    
+            </div>
+    
+    
+            <div class="form-group">
+    
+                <label>
+                    Ingredient
+                </label>
+    
+                <select
+                    id="adminRecipeIngredientIngredient"
+                >
+    
+                    <option value="">
+                        Select Ingredient
+                    </option>
+    
+                    ${ingredientOptions}
+    
+                </select>
+    
+            </div>
+    
+    
+            <div class="form-group">
+    
+                <label>
+                    Quantity
+                </label>
+    
+                <input
+                    type="number"
+                    id="adminRecipeIngredientQuantity"
+                    value="${item?.quantity || ''}"
+                    min="0"
+                    step="0.01"
+                >
+    
+            </div>
+    
+    
+            <div class="form-group">
+    
+                <label>
+                    Unit
+                </label>
+    
+                <input
+                    type="text"
+                    id="adminRecipeIngredientUnit"
+                    value="${item?.unit || ''}"
+                    placeholder="g / ml / pc"
+                >
+    
+            </div>
+    
+    
+            <div class="form-group">
+    
+                <label>
+                    Notes
+                </label>
+    
+                <input
+                    type="text"
+                    id="adminRecipeIngredientNotes"
+                    value="${item?.notes || ''}"
+                >
+    
+            </div>
+    
+        `;
+    
+    }
+    
     if (type === 'packaging') {
         return `
             <div class="form-group">
@@ -2098,6 +2445,144 @@ function setupAdminTabs() {
         );
 
     });
+
+}
+
+function loadRecipesAdminTable() {
+
+    const tbody =
+        document.getElementById(
+            'recipesAdminTable'
+        );
+
+    if (!tbody) {
+        return;
+    }
+
+    tbody.innerHTML = '';
+
+    masterData.recipes.forEach(function(recipe) {
+
+        const tr =
+            document.createElement('tr');
+
+        tr.innerHTML = `
+
+            <td>
+                ${recipe.recipe_id}
+            </td>
+
+            <td>
+                ${recipe.recipe_name}
+            </td>
+
+            <td>
+                ${recipe.yield_qty}
+            </td>
+
+            <td>
+                ${recipe.yield_unit}
+            </td>
+
+            <td>
+
+                <button
+                    type="button"
+                    class="btn btn-sm btn-outline-primary"
+                    onclick="editRecipe('${recipe.recipe_id}')"
+                >
+                    Edit
+                </button>
+
+            </td>
+
+        `;
+
+        tbody.appendChild(tr);
+
+    });
+
+}
+
+function loadRecipeIngredientsAdminTable() {
+
+    const tbody =
+        document.getElementById(
+            'recipeIngredientsAdminTable'
+        );
+
+    if (!tbody) {
+        return;
+    }
+
+    tbody.innerHTML = '';
+
+    masterData.recipeIngredients
+        .forEach(function(item) {
+
+            const recipe =
+                masterData.recipes.find(
+                    r =>
+                        String(r.recipe_id) ===
+                        String(item.recipe_id)
+                );
+
+            const ingredient =
+                masterData.ingredients.find(
+                    i =>
+                        String(i.ingredient_id) ===
+                        String(item.ingredient_id)
+                );
+
+            const tr =
+                document.createElement('tr');
+
+            tr.innerHTML = `
+
+                <td>
+                    ${recipe
+                        ? recipe.recipe_name
+                        : item.recipe_id}
+                </td>
+
+                <td>
+                    ${ingredient
+                        ? ingredient.ingredient_name
+                        : item.ingredient_id}
+                </td>
+
+                <td>
+                    ${item.quantity}
+                </td>
+
+                <td>
+                    ${item.unit}
+                </td>
+
+                <td>
+                    ${item.notes || ''}
+                </td>
+
+                <td>
+
+                    <button
+                        type="button"
+                        class="btn btn-sm btn-outline-primary"
+                        onclick="editRecipeIngredient(
+                            '${item.recipe_id}',
+                            '${item.ingredient_id}'
+                        )"
+                    >
+                        Edit
+                    </button>
+
+                </td>
+
+            `;
+
+            tbody.appendChild(tr);
+
+        });
 
 }
 
