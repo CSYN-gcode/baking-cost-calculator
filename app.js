@@ -2184,6 +2184,7 @@ function getAdminForm(
 }
 
 function closeAdminModal() {
+    console.log('admin modal close');
     document.getElementById('adminModal').style.display = 'none';
 }
 
