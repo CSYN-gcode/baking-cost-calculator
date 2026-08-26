@@ -598,29 +598,29 @@ function sendAdminAdd(
     );
 }
 
-function editIngredient(id) {
-    openAdminModal(
-        'ingredient',
-        'edit',
-        id
-    );
-}
+// function editIngredient(id) {
+//     openAdminModal(
+//         'ingredient',
+//         'edit',
+//         id
+//     );
+// }
 
-function editPackaging(id) {
-    openAdminModal(
-        'packaging',
-        'edit',
-        id
-    );
-}
+// function editPackaging(id) {
+//     openAdminModal(
+//         'packaging',
+//         'edit',
+//         id
+//     );
+// }
 
-function editExpense(id) {
-    openAdminModal(
-        'expense',
-        'edit',
-        id
-    );
-}
+// function editExpense(id) {
+//     openAdminModal(
+//         'expense',
+//         'edit',
+//         id
+//     );
+// }
 
 // function editIngredient(id) {
 //     const item =
