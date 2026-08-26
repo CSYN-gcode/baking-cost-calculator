@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
     setupEvents();
     showCalculator();
     loadMasterlist();
-    setupAdminTabs();
+    // setupAdminTabs();
 });
 
 function loadAdminTables() {
@@ -750,45 +750,21 @@ function updateMasterlist(
     );
 }
 
-function switchAdminTab(
-    tabId,
-    button
-) {
-
-    document
-        .querySelectorAll(
-            '.admin-tab-content'
-        )
+function switchAdminTab(tabId, button){
+    
+    document.querySelectorAll('.admin-tab-content')
         .forEach(function(tab) {
-
             tab.style.display =
                 'none';
-
         });
 
-
-    document
-        .querySelectorAll(
-            '.admin-tab'
-        )
+    document.querySelectorAll('.admin-tab')
         .forEach(function(tabButton) {
-
-            tabButton.classList
-                .remove('active');
-
+            tabButton.classList.remove('active');
         });
 
-
-    document
-        .getElementById(tabId)
-        .style.display =
-        'block';
-
-
-    button.classList.add(
-        'active'
-    );
-
+    document.getElementById(tabId).style.display = 'block';
+    button.classList.add('active');
 }
 
 function adminLogin() {
@@ -2383,69 +2359,6 @@ function getAdminForm(
     }
 
     return '';
-}
-
-function setupAdminTabs() {
-
-    const tabs =
-        document.querySelectorAll(
-            '.admin-tab'
-        );
-
-    tabs.forEach(function(tab) {
-
-        tab.addEventListener(
-            'click',
-            function() {
-
-                const target =
-                    tab.dataset.adminTab;
-
-                // Remove active state
-                tabs.forEach(function(item) {
-
-                    item.classList.remove(
-                        'active'
-                    );
-
-                });
-
-                tab.classList.add('active');
-
-
-                // Hide all tab contents
-                document
-                    .querySelectorAll(
-                        '.admin-tab-content'
-                    )
-                    .forEach(function(content) {
-
-                        content.style.display =
-                            'none';
-
-                    });
-
-
-                // Show selected tab
-                const selected =
-                    document.getElementById(
-                        'adminTab' +
-                        target.charAt(0).toUpperCase() +
-                        target.slice(1)
-                    );
-
-                if (selected) {
-
-                    selected.style.display =
-                        'block';
-
-                }
-
-            }
-        );
-
-    });
-
 }
 
 function loadRecipesAdminTable() {
