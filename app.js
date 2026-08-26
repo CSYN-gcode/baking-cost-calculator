@@ -708,8 +708,6 @@ function updateMasterlist(
                 response &&
                 response.success
             ) {
-                closeAdminModal();
-                
                 alert(
                     'Saved successfully!'
                 );
@@ -1041,6 +1039,9 @@ function loadMasterlist() {
     };
 
     document.body.appendChild(script);
+
+    //clark newly added 08/26/2026
+    closeAdminModal();
 }
 
 
@@ -1114,7 +1115,6 @@ function setupEvents() {
             adminLogin
         );
     
-    
     document
         .getElementById('adminLogoutButton')
         .addEventListener(
@@ -1122,15 +1122,12 @@ function setupEvents() {
             adminLogout
         );
     
-    
     document
         .querySelectorAll('.admin-tab')
         .forEach(function(button) {
-    
             button.addEventListener(
                 'click',
                 function() {
-    
                     switchAdminTab(
                         this.dataset.tab,
                         this
@@ -1143,18 +1140,15 @@ function setupEvents() {
     document
         .getElementById('addIngredientButton')
         .addEventListener('click', function() {
-    
             openAdminModal(
                 'ingredient',
                 'add'
             );
         });
     
-    
     document
         .getElementById('addPackagingButton')
         .addEventListener('click', function() {
-    
             openAdminModal(
                 'packaging',
                 'add'
@@ -1164,46 +1158,23 @@ function setupEvents() {
     document
         .getElementById('addExpenseButton')
         .addEventListener('click', function() {
-    
             openAdminModal(
                 'expense',
                 'add'
             );
         });
 
-    document
-        .getElementById('adminModalClose')
-        .addEventListener(
-            'click',
-            closeAdminModal
-        );
-    
-    document
-        .getElementById('adminModalCancel')
-        .addEventListener(
-            'click',
-            closeAdminModal
-        );
-    
-    document
-        .getElementById('adminModalSave')
-        .addEventListener(
-            'click',
-            saveAdminModal
-        );
+    document.getElementById('adminModalClose').addEventListener('click', closeAdminModal);
+    document.getElementById('adminModalCancel').addEventListener('click', closeAdminModal);
+    document.getElementById('adminModalSave').addEventListener('click', saveAdminModal);
 }
 
 function populateRecipes() {
 
     const select =
-        document.getElementById(
-            'recipeSelect'
-        );
+        document.getElementById('recipeSelect');
 
-
-    select.innerHTML =
-        '<option value="">Select recipe</option>';
-
+    select.innerHTML = '<option value="">Select recipe</option>';
 
     masterData.recipes.forEach(
         function (recipe) {
@@ -1226,9 +1197,7 @@ function populateRecipes() {
 
         }
     );
-
 }
-
 
 function populatePackaging() {
 
@@ -1237,10 +1206,8 @@ function populatePackaging() {
             'packagingSelect'
         );
 
-
     select.innerHTML =
         '<option value="">No packaging</option>';
-
 
     masterData.packaging.forEach(
         function (item) {
@@ -1250,16 +1217,13 @@ function populatePackaging() {
                     'option'
                 );
 
-
             option.value =
                 item.packaging_id;
-
 
             option.textContent =
                 item.packaging_name +
                 ' - ' +
                 money(item.cost);
-
 
             select.appendChild(option);
 
