@@ -54,16 +54,12 @@
         </div>
     </div>
 
-
     <!-- <div id="loading" class="loading">
 
         Loading masterlist...
-
     </div> -->
 
-
     <div id="calculator" style="display:none;">
-
 
         <!-- RECIPE -->
 
@@ -99,66 +95,40 @@
                     >
 
                 </div>
-
                 <div>
-
-                    <label>
-                        Unit
-                    </label>
-
-                    <input
-                        type="text"
-                        id="yieldUnit"
-                        readonly
-                    >
-
+                    <label> Unit </label>
+                    <input type="text" id="yieldUnit" readonly>
                 </div>
-
             </div>
-
         </div>
 
-
         <!-- INGREDIENTS -->
-
         <div class="card">
-
             <h2>Ingredients</h2>
-
             <div id="ingredientList">
-
                 <p class="muted">
                     Select a recipe first.
                 </p>
-
             </div>
 
-
             <div class="total-row">
-
                 <span>
                     Ingredient Cost
                 </span>
-
                 <strong id="ingredientTotal">
                     ₱0.00
                 </strong>
-
             </div>
-
         </div>
 
         <!-- OTHER COSTS -->
-
         <div class="card">
             <h2>Other Costs</h2>
         
             <div id="expenseList">
-        
                 <p class="muted">
                     Loading expenses...
                 </p>
-        
             </div>
         
             <label>
@@ -177,14 +147,7 @@
                 Packaging Quantity
             </label>
         
-            <input
-                type="number"
-                id="packagingQty"
-                value="1"
-                min="0"
-                step="1"
-            >
-        
+            <input type="number" id="packagingQty" value="1" min="0" step="1">
         </div>
 
         <!-- PROFIT -->
@@ -193,10 +156,7 @@
 
             <h2>Pricing</h2>
 
-
-            <label>
-                Pricing Method
-            </label>
+            <label> Pricing Method </label>
 
             <select id="pricingMethod">
 
@@ -254,15 +214,11 @@
                 <strong id="costPerUnit">
                     ₱0.00
                 </strong>
-
             </div>
-
 
             <hr>
 
-
             <div class="selling-price">
-
                 <span>
                     Suggested Selling Price
                 </span>
@@ -270,12 +226,9 @@
                 <strong id="sellingPrice">
                     ₱0.00
                 </strong>
-
             </div>
 
-
             <div class="result-line">
-
                 <span>
                     Estimated Profit / Unit
                 </span>
@@ -283,12 +236,9 @@
                 <strong id="profitPerUnit">
                     ₱0.00
                 </strong>
-
             </div>
 
-
             <div class="result-line">
-
                 <span>
                     Estimated Batch Profit
                 </span>
@@ -296,19 +246,15 @@
                 <strong id="batchProfit">
                     ₱0.00
                 </strong>
-
             </div>
-
         </div>
-
-
+        
         <button
             id="refreshButton"
             class="refresh-button"
         >
             🔄 Refresh Masterlist
         </button>
-
 
     </div>
     <!-- end of calculator container-->
@@ -477,7 +423,6 @@
     
             </div>
     
-    
             <!-- PACKAGING -->
     
             <div
@@ -582,6 +527,94 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="admin-section">
+        <div class="admin-section-header">
+    
+            <div>
+                <h3>Recipes</h3>
+    
+                <p>
+                    Manage baking recipes and production yield.
+                </p>
+            </div>
+    
+            <button
+                type="button"
+                class="btn btn-primary"
+                id="addRecipeButton"
+            >
+                + Add Recipe
+            </button>
+    
+        </div>
+    
+        <div class="table-responsive">
+    
+            <table class="table">
+    
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Recipe Name</th>
+                        <th>Yield</th>
+                        <th>Unit</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+    
+                <tbody id="recipesAdminTable">
+                </tbody>
+    
+            </table>
+    
+        </div>
+    </div>
+    <div class="admin-section">
+        <div class="admin-section-header">
+    
+            <div>
+                <h3>Recipe Ingredients</h3>
+    
+                <p>
+                    Manage ingredients used by each recipe.
+                </p>
+            </div>
+    
+            <button
+                type="button"
+                class="btn btn-primary"
+                id="addRecipeIngredientButton"
+            >
+                + Add Recipe Ingredient
+            </button>
+    
+        </div>
+    
+        <div class="table-responsive">
+    
+            <table class="table">
+    
+                <thead>
+    
+                    <tr>
+                        <th>Recipe</th>
+                        <th>Ingredient</th>
+                        <th>Quantity</th>
+                        <th>Unit</th>
+                        <th>Notes</th>
+                        <th>Actions</th>
+                    </tr>
+    
+                </thead>
+    
+                <tbody id="recipeIngredientsAdminTable">
+                </tbody>
+    
+            </table>
+    
+        </div>
+    
     </div>
 </div>
 
