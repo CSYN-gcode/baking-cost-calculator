@@ -429,20 +429,21 @@
             >
     
                 <div class="admin-section-header">
-    
                     <div>
-    
-                        <h3>
-                            Ingredients
-                        </h3>
-    
+                        <h3>Ingredients</h3>
+                
                         <p>
-                            Update purchase prices and
-                            quantities.
+                            Manage ingredients and purchase prices.
                         </p>
-    
                     </div>
-    
+                
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        id="addIngredientButton"
+                    >
+                        + Add Ingredient
+                    </button>
                 </div>
     
     
@@ -486,19 +487,21 @@
             >
     
                 <div class="admin-section-header">
-    
                     <div>
-    
-                        <h3>
-                            Packaging
-                        </h3>
-    
+                        <h3>Packaging</h3>
+                
                         <p>
                             Manage packaging costs.
                         </p>
-    
                     </div>
-    
+                
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        id="addPackagingButton"
+                    >
+                        + Add Packaging
+                    </button>
                 </div>
     
     
@@ -540,15 +543,21 @@
             >
                 <div class="admin-section-header">
                     <div>
-                        <h3>
-                            Other Expenses
-                        </h3>
-    
+                        <h3>Other Expenses</h3>
+                
                         <p>
-                            Manage labor, electricity,
-                            gas and miscellaneous rates.
+                            Manage labor, electricity, gas
+                            and miscellaneous costs.
                         </p>
                     </div>
+                
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        id="addExpenseButton"
+                    >
+                        + Add Expense
+                    </button>
                 </div>
     
     
@@ -576,6 +585,56 @@
     </div>
 </div>
 
+    
+<div
+    id="adminModal"
+    class="admin-modal"
+    style="display:none;"
+>
+    <div class="admin-modal-content">
+
+        <div class="admin-modal-header">
+
+            <h3 id="adminModalTitle">
+                Add Item
+            </h3>
+
+            <button
+                type="button"
+                id="adminModalClose"
+                class="modal-close"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div id="adminModalBody"></div>
+
+
+        <div class="admin-modal-footer">
+
+            <button
+                type="button"
+                id="adminModalCancel"
+                class="btn btn-secondary"
+            >
+                Cancel
+            </button>
+
+            <button
+                type="button"
+                id="adminModalSave"
+                class="btn btn-primary"
+            >
+                Save
+            </button>
+
+        </div>
+
+    </div>
+</div>
 
 <script src="app.js"></script>
 
