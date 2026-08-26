@@ -228,66 +228,37 @@ function populateExpensesAdmin() {
 }
 
 function saveAdminModal() {
-
     if (adminModalType === 'ingredient') {
-
         saveIngredient();
-
         return;
-
     }
 
-
     if (adminModalType === 'packaging') {
-
         savePackaging();
-
         return;
-
     }
 
     if (adminModalType === 'expense') {
-
         saveExpense();
-
         return;
     }
 }
 
 function saveIngredient() {
-
     const name =
-        document
-            .getElementById(
-                'adminIngredientName'
-            )
-            .value
-            .trim();
+        document.getElementById('adminIngredientName').value.trim();
 
     const unit =
-        document
-            .getElementById(
-                'adminIngredientUnit'
-            )
-            .value;
-
+        document .getElementById('adminIngredientUnit').value;
 
     const qty =
         Number(
-            document
-                .getElementById(
-                    'adminPurchaseQty'
-                )
-                .value
+            document.getElementById('adminPurchaseQty').value
         );
 
     const price =
         Number(
-            document
-                .getElementById(
-                    'adminPurchasePrice'
-                )
-                .value
+            document.getElementById('adminPurchasePrice').value
         );
 
     if (
@@ -302,7 +273,6 @@ function saveIngredient() {
         );
 
         return;
-
     }
 
     if (
@@ -319,10 +289,7 @@ function saveIngredient() {
             }
         );
 
-    }
-
-    else {
-
+    }else{
         updateMasterlist(
             'Ingredients',
             {
@@ -333,7 +300,6 @@ function saveIngredient() {
                 purchase_price: price
             }
         );
-
     }
 }
 
@@ -727,7 +693,6 @@ function updateMasterlist(
     sheet,
     data
 ) {
-
     const callbackName =
         'updateCallback_' +
         Date.now();
@@ -743,6 +708,8 @@ function updateMasterlist(
                 response &&
                 response.success
             ) {
+                closeAdminModal();
+                
                 alert(
                     'Saved successfully!'
                 );
@@ -791,12 +758,10 @@ function updateMasterlist(
 
         });
 
-
     params.append(
         'callback',
         callbackName
     );
-
 
     const script =
         document.createElement('script');
@@ -806,11 +771,9 @@ function updateMasterlist(
         '?' +
         params.toString();
 
-
     document.body.appendChild(
         script
     );
-
 }
 
 function switchAdminTab(
@@ -957,7 +920,6 @@ function loadMasterlist() {
                 );
             }
 
-
             if (!data.success) {
                 throw new Error(
                     data.error ||
@@ -991,7 +953,6 @@ function loadMasterlist() {
                 Array.isArray(data.packaging)
                     ? data.packaging
                     : [];
-
 
             masterData.expenses =
                 Array.isArray(data.expenses)
@@ -1225,7 +1186,6 @@ function setupEvents() {
             'click',
             closeAdminModal
         );
-    
     
     document
         .getElementById('adminModalSave')
@@ -1975,21 +1935,15 @@ function openAdminModal(
             'adminModalBody'
         );
 
-
     title.textContent =
         mode === 'add'
             ? 'Add ' + getAdminTypeName(type)
             : 'Edit ' + getAdminTypeName(type);
 
-
     body.innerHTML =
         getAdminForm(type, mode, id);
 
-
-    document
-        .getElementById('adminModal')
-        .style.display = 'flex';
-
+    document.getElementById('adminModal').style.display = 'flex';
 }
 
 function getAdminTypeName(type) {
@@ -2014,14 +1968,10 @@ function getAdminForm(
     mode,
     id
 ) {
-
     let item = null;
 
-
     if (mode === 'edit') {
-
         if (type === 'ingredient') {
-
             item =
                 masterData.ingredients.find(
                     x =>
@@ -2029,11 +1979,9 @@ function getAdminForm(
                             x.ingredient_id
                         ) === String(id)
                 );
-
         }
 
         if (type === 'packaging') {
-
             item =
                 masterData.packaging.find(
                     x =>
@@ -2041,11 +1989,9 @@ function getAdminForm(
                             x.packaging_id
                         ) === String(id)
                 );
-
         }
 
         if (type === 'expense') {
-
             item =
                 masterData.expenses.find(
                     x =>
@@ -2053,18 +1999,12 @@ function getAdminForm(
                             x.expense_id
                         ) === String(id)
                 );
-
         }
-
     }
 
-
     if (type === 'ingredient') {
-
         return `
-
             <div class="form-group">
-
                 <label>
                     Ingredient Name
                 </label>
@@ -2074,12 +2014,9 @@ function getAdminForm(
                     value="${item?.ingredient_name || ''}"
                     placeholder="e.g. All Purpose Flour"
                 >
-
             </div>
 
-
             <div class="form-group">
-
                 <label>
                     Unit
                 </label>
@@ -2112,12 +2049,9 @@ function getAdminForm(
                     </option>
 
                 </select>
-
             </div>
 
-
             <div class="form-group">
-
                 <label>
                     Purchase Quantity
                 </label>
@@ -2129,12 +2063,9 @@ function getAdminForm(
                     min="0"
                     step="0.01"
                 >
-
             </div>
 
-
             <div class="form-group">
-
                 <label>
                     Purchase Price
                 </label>
@@ -2146,17 +2077,12 @@ function getAdminForm(
                     min="0"
                     step="0.01"
                 >
-
             </div>
-
         `;
     }
 
-
     if (type === 'packaging') {
-
         return `
-
             <div class="form-group">
 
                 <label>
@@ -2185,9 +2111,7 @@ function getAdminForm(
 
             </div>
 
-
             <div class="form-group">
-
                 <label>
                     Cost
                 </label>
@@ -2199,12 +2123,9 @@ function getAdminForm(
                     min="0"
                     step="0.01"
                 >
-
             </div>
-
         `;
     }
-
 
     if (type === 'expense') {
 
@@ -2263,9 +2184,7 @@ function getAdminForm(
 }
 
 function closeAdminModal() {
-    document
-        .getElementById('adminModal')
-        .style.display = 'none';
+    document.getElementById('adminModal').style.display = 'none';
 }
 
 function adminLogout() {
