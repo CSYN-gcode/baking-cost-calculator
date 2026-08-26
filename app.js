@@ -19,69 +19,39 @@ let masterData = {
 };
 
 document.addEventListener('DOMContentLoaded', function () {
-
     setupEvents();
     showCalculator();
     loadMasterlist();
-
+    setupAdminTabs();
 });
 
 function loadAdminTables() {
-
     populateIngredientsAdmin();
-
     populatePackagingAdmin();
-
     populateExpensesAdmin();
-
 }
 
 function populateIngredientsAdmin() {
-
     const tbody =
         document.getElementById(
             'ingredientsAdminBody'
         );
 
-
     tbody.innerHTML = '';
-
 
     masterData.ingredients.forEach(
         function(item) {
-
             const row =
                 document.createElement('tr');
 
-
             row.innerHTML = `
-
+                <td> ${item.ingredient_id} </td>
+                <td> ${item.ingredient_name} </td>
+                <td> ${item.unit} </td>
+                <td> ${item.purchase_qty} </td>
+                <td> ${money(item.purchase_price)} </td>
+                <td> ${money(item.cost_per_unit)} </td>
                 <td>
-                    ${item.ingredient_id}
-                </td>
-
-                <td>
-                    ${item.ingredient_name}
-                </td>
-
-                <td>
-                    ${item.unit}
-                </td>
-
-                <td>
-                    ${item.purchase_qty}
-                </td>
-
-                <td>
-                    ${money(item.purchase_price)}
-                </td>
-
-                <td>
-                    ${money(item.cost_per_unit)}
-                </td>
-
-                <td>
-                        
                     <button
                         type="button"
                         class="btn btn-small btn-primary"
@@ -89,32 +59,23 @@ function populateIngredientsAdmin() {
                     >
                         ✏ Edit
                     </button>
-
                 </td>
-
             `;
-            
+        
             //clark comment 08/26/2026
             // onclick="editIngredient('${item.ingredient_id}')"
-
-
             tbody.appendChild(row);
-
         }
     );
-
 }
 
 function populatePackagingAdmin() {
-
     const tbody =
         document.getElementById(
             'packagingAdminBody'
         );
 
-
     tbody.innerHTML = '';
-
 
     masterData.packaging.forEach(
         function(item) {
@@ -122,27 +83,12 @@ function populatePackagingAdmin() {
             const row =
                 document.createElement('tr');
 
-
             row.innerHTML = `
-
+                <td> ${item.packaging_id} </td>
+                <td> ${item.packaging_name} </td>
+                <td> ${item.unit} </td>
+                <td> ${money(item.cost)} </td>
                 <td>
-                    ${item.packaging_id}
-                </td>
-
-                <td>
-                    ${item.packaging_name}
-                </td>
-
-                <td>
-                    ${item.unit}
-                </td>
-
-                <td>
-                    ${money(item.cost)}
-                </td>
-
-                <td>
-
                     <button
                         type="button"
                         class="btn btn-small btn-primary"
@@ -150,32 +96,22 @@ function populatePackagingAdmin() {
                     >
                         ✏ Edit
                     </button>
-
                 </td>
-
             `;
             //clark comment 08/26/2026
             // onclick="editPackaging('${item.packaging_id}')"
-            
-
-
             tbody.appendChild(row);
-
         }
     );
-
 }
 
 function populateExpensesAdmin() {
-
     const tbody =
         document.getElementById(
             'expensesAdminBody'
         );
 
-
     tbody.innerHTML = '';
-
 
     masterData.expenses.forEach(
         function(item) {
@@ -183,27 +119,12 @@ function populateExpensesAdmin() {
             const row =
                 document.createElement('tr');
 
-
             row.innerHTML = `
-
+                <td> ${item.expense_id} </td>
+                <td> ${item.expense_name} </td>
+                <td> ${item.unit} </td>
+                <td> ${money(item.cost)} </td>
                 <td>
-                    ${item.expense_id}
-                </td>
-
-                <td>
-                    ${item.expense_name}
-                </td>
-
-                <td>
-                    ${item.unit}
-                </td>
-
-                <td>
-                    ${money(item.cost)}
-                </td>
-
-                <td>
-
                     <button
                         type="button"
                         class="btn btn-small btn-primary"
@@ -211,20 +132,13 @@ function populateExpensesAdmin() {
                     >
                         ✏ Edit
                     </button>
-
                 </td>
-
             `;
             //clark comment 08/26/2026
             // onclick="editExpense('${item.expense_id}')"
-            
-
-
             tbody.appendChild(row);
-
         }
     );
-
 }
 
 function saveAdminModal() {
@@ -245,11 +159,9 @@ function saveAdminModal() {
 }
 
 function saveIngredient() {
-    const name =
-        document.getElementById('adminIngredientName').value.trim();
+    const name = document.getElementById('adminIngredientName').value.trim();
 
-    const unit =
-        document .getElementById('adminIngredientUnit').value;
+    const unit = document .getElementById('adminIngredientUnit').value;
 
     const qty =
         Number(
@@ -271,14 +183,13 @@ function saveIngredient() {
         alert(
             'Please complete all ingredient fields.'
         );
-
+        
         return;
     }
 
     if (
         adminModalMode === 'add'
     ) {
-
         sendAdminAdd(
             'Ingredients',
             {
@@ -288,7 +199,6 @@ function saveIngredient() {
                 purchase_price: price
             }
         );
-
     }else{
         updateMasterlist(
             'Ingredients',
@@ -304,21 +214,9 @@ function saveIngredient() {
 }
 
 function savePackaging() {
-    const name =
-        document
-            .getElementById(
-                'adminPackagingName'
-            )
-            .value
-            .trim();
+    const name = document.getElementById('adminPackagingName').value.trim();
 
-    const unit =
-        document
-            .getElementById(
-                'adminPackagingUnit'
-            )
-            .value
-            .trim();
+    const unit = document.getElementById('adminPackagingUnit').value.trim();
 
     const cost =
         Number(
@@ -347,18 +245,13 @@ function savePackaging() {
         cost: cost
     };
 
-    if (
-        adminModalMode === 'add'
-    ) {
+    if(adminModalMode === 'add') {
         delete data.id;
-
         sendAdminAdd(
             'Packaging',
             data
         );
-
-    }else {
-
+    }else{
         updateMasterlist(
             'Packaging',
             data
@@ -2143,6 +2036,69 @@ function getAdminForm(
     }
 
     return '';
+}
+
+function setupAdminTabs() {
+
+    const tabs =
+        document.querySelectorAll(
+            '.admin-tab'
+        );
+
+    tabs.forEach(function(tab) {
+
+        tab.addEventListener(
+            'click',
+            function() {
+
+                const target =
+                    tab.dataset.adminTab;
+
+                // Remove active state
+                tabs.forEach(function(item) {
+
+                    item.classList.remove(
+                        'active'
+                    );
+
+                });
+
+                tab.classList.add('active');
+
+
+                // Hide all tab contents
+                document
+                    .querySelectorAll(
+                        '.admin-tab-content'
+                    )
+                    .forEach(function(content) {
+
+                        content.style.display =
+                            'none';
+
+                    });
+
+
+                // Show selected tab
+                const selected =
+                    document.getElementById(
+                        'adminTab' +
+                        target.charAt(0).toUpperCase() +
+                        target.slice(1)
+                    );
+
+                if (selected) {
+
+                    selected.style.display =
+                        'block';
+
+                }
+
+            }
+        );
+
+    });
+
 }
 
 function closeAdminModal() {
