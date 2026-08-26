@@ -2029,7 +2029,7 @@ function getAdminForm(
         
         if (type === 'recipe') {
             item =
-                masterData.recipe.find(
+                masterData.recipes.find(
                     x =>
                         String(
                             x.recipe_id
