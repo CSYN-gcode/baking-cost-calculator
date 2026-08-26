@@ -6,6 +6,9 @@ console.log('BAKING API URL:', API_URL);
 let adminAuthenticated = false;
 
 let adminPin = '';
+let adminModalType = null;
+let adminModalMode = 'add';
+let adminModalId = null;
 
 let masterData = {
     ingredients: [],
@@ -78,11 +81,11 @@ function populateIngredientsAdmin() {
                 </td>
 
                 <td>
-
+                        
                     <button
                         type="button"
                         class="btn btn-small btn-primary"
-                        onclick="editIngredient('${item.ingredient_id}')"
+                        onclick="openAdminModal('ingredient', 'edit', '${item.ingredient_id}')"
                     >
                         ✏ Edit
                     </button>
@@ -90,6 +93,9 @@ function populateIngredientsAdmin() {
                 </td>
 
             `;
+            
+            //clark comment 08/26/2026
+            // onclick="editIngredient('${item.ingredient_id}')"
 
 
             tbody.appendChild(row);
@@ -140,7 +146,7 @@ function populatePackagingAdmin() {
                     <button
                         type="button"
                         class="btn btn-small btn-primary"
-                        onclick="editPackaging('${item.packaging_id}')"
+                        onclick="openAdminModal('packaging', 'edit', '${item.packaging_id}')"
                     >
                         ✏ Edit
                     </button>
@@ -148,6 +154,9 @@ function populatePackagingAdmin() {
                 </td>
 
             `;
+            //clark comment 08/26/2026
+            // onclick="editPackaging('${item.packaging_id}')"
+            
 
 
             tbody.appendChild(row);
@@ -198,7 +207,7 @@ function populateExpensesAdmin() {
                     <button
                         type="button"
                         class="btn btn-small btn-primary"
-                        onclick="editExpense('${item.expense_id}')"
+                        onclick="openAdminModal('expense', 'edit', '${item.expense_id}')"
                     >
                         ✏ Edit
                     </button>
@@ -206,6 +215,9 @@ function populateExpensesAdmin() {
                 </td>
 
             `;
+            //clark comment 08/26/2026
+            // onclick="editExpense('${item.expense_id}')"
+            
 
 
             tbody.appendChild(row);
@@ -778,14 +790,12 @@ function loadMasterlist() {
 
 
 function setupEvents() {
-
     document
         .getElementById('recipeSelect')
         .addEventListener(
             'change',
             calculateRecipe
         );
-
 
     document
         .getElementById('packagingSelect')
@@ -873,10 +883,63 @@ function setupEvents() {
     
                 }
             );
-    
         });
-}
 
+    document
+        .getElementById('addIngredientButton')
+        .addEventListener('click', function() {
+    
+            openAdminModal(
+                'ingredient',
+                'add'
+            );
+        });
+    
+    
+    document
+        .getElementById('addPackagingButton')
+        .addEventListener('click', function() {
+    
+            openAdminModal(
+                'packaging',
+                'add'
+            );
+        });
+    
+    
+    document
+        .getElementById('addExpenseButton')
+        .addEventListener('click', function() {
+    
+            openAdminModal(
+                'expense',
+                'add'
+            );
+        });
+
+    document
+        .getElementById('adminModalClose')
+        .addEventListener(
+            'click',
+            closeAdminModal
+        );
+    
+    
+    document
+        .getElementById('adminModalCancel')
+        .addEventListener(
+            'click',
+            closeAdminModal
+        );
+    
+    
+    document
+        .getElementById('adminModalSave')
+        .addEventListener(
+            'click',
+            saveAdminModal
+        );
+}
 
 function populateRecipes() {
 
@@ -1597,6 +1660,319 @@ function showCalculator() {
         .style.display = 'block';
 }
 
+function openAdminModal(
+    type,
+    mode = 'add',
+    id = null
+) {
+
+    adminModalType = type;
+    adminModalMode = mode;
+    adminModalId = id;
+
+
+    const title =
+        document.getElementById(
+            'adminModalTitle'
+        );
+
+    const body =
+        document.getElementById(
+            'adminModalBody'
+        );
+
+
+    title.textContent =
+        mode === 'add'
+            ? 'Add ' + getAdminTypeName(type)
+            : 'Edit ' + getAdminTypeName(type);
+
+
+    body.innerHTML =
+        getAdminForm(type, mode, id);
+
+
+    document
+        .getElementById('adminModal')
+        .style.display = 'flex';
+
+}
+
+function getAdminTypeName(type) {
+
+    if (type === 'ingredient') {
+        return 'Ingredient';
+    }
+
+    if (type === 'packaging') {
+        return 'Packaging';
+    }
+
+    if (type === 'expense') {
+        return 'Expense';
+    }
+
+    return 'Item';
+}
+
+function getAdminForm(
+    type,
+    mode,
+    id
+) {
+
+    let item = null;
+
+
+    if (mode === 'edit') {
+
+        if (type === 'ingredient') {
+
+            item =
+                masterData.ingredients.find(
+                    x =>
+                        String(
+                            x.ingredient_id
+                        ) === String(id)
+                );
+
+        }
+
+        if (type === 'packaging') {
+
+            item =
+                masterData.packaging.find(
+                    x =>
+                        String(
+                            x.packaging_id
+                        ) === String(id)
+                );
+
+        }
+
+        if (type === 'expense') {
+
+            item =
+                masterData.expenses.find(
+                    x =>
+                        String(
+                            x.expense_id
+                        ) === String(id)
+                );
+
+        }
+
+    }
+
+
+    if (type === 'ingredient') {
+
+        return `
+
+            <div class="form-group">
+
+                <label>
+                    Ingredient Name
+                </label>
+
+                <input
+                    id="adminIngredientName"
+                    value="${item?.ingredient_name || ''}"
+                    placeholder="e.g. All Purpose Flour"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Unit
+                </label>
+
+                <select id="adminIngredientUnit">
+
+                    <option value="g"
+                        ${item?.unit === 'g' ? 'selected' : ''}>
+                        g
+                    </option>
+
+                    <option value="kg"
+                        ${item?.unit === 'kg' ? 'selected' : ''}>
+                        kg
+                    </option>
+
+                    <option value="ml"
+                        ${item?.unit === 'ml' ? 'selected' : ''}>
+                        ml
+                    </option>
+
+                    <option value="l"
+                        ${item?.unit === 'l' ? 'selected' : ''}>
+                        l
+                    </option>
+
+                    <option value="pc"
+                        ${item?.unit === 'pc' ? 'selected' : ''}>
+                        pc
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Purchase Quantity
+                </label>
+
+                <input
+                    type="number"
+                    id="adminPurchaseQty"
+                    value="${item?.purchase_qty || ''}"
+                    min="0"
+                    step="0.01"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Purchase Price
+                </label>
+
+                <input
+                    type="number"
+                    id="adminPurchasePrice"
+                    value="${item?.purchase_price || ''}"
+                    min="0"
+                    step="0.01"
+                >
+
+            </div>
+
+        `;
+    }
+
+
+    if (type === 'packaging') {
+
+        return `
+
+            <div class="form-group">
+
+                <label>
+                    Packaging Name
+                </label>
+
+                <input
+                    id="adminPackagingName"
+                    value="${item?.packaging_name || ''}"
+                    placeholder="e.g. Cookie Box"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Unit
+                </label>
+
+                <input
+                    id="adminPackagingUnit"
+                    value="${item?.unit || 'pc'}"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Cost
+                </label>
+
+                <input
+                    type="number"
+                    id="adminPackagingCost"
+                    value="${item?.cost || ''}"
+                    min="0"
+                    step="0.01"
+                >
+
+            </div>
+
+        `;
+    }
+
+
+    if (type === 'expense') {
+
+        return `
+
+            <div class="form-group">
+
+                <label>
+                    Expense Name
+                </label>
+
+                <input
+                    id="adminExpenseName"
+                    value="${item?.expense_name || ''}"
+                    placeholder="e.g. Labor"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Unit
+                </label>
+
+                <input
+                    id="adminExpenseUnit"
+                    value="${item?.unit || 'batch'}"
+                    placeholder="e.g. batch"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Cost
+                </label>
+
+                <input
+                    type="number"
+                    id="adminExpenseCost"
+                    value="${item?.cost || ''}"
+                    min="0"
+                    step="0.01"
+                >
+
+            </div>
+
+        `;
+    }
+
+    return '';
+}
+
+function closeAdminModal() {
+    document
+        .getElementById('adminModal')
+        .style.display = 'none';
+}
 
 function adminLogout() {
     adminAuthenticated = false;
